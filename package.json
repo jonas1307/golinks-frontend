@@ -1,0 +1,30 @@
+{
+  "name": "golinks",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prettier:check": "prettier --check './**/**.{ts,tsx}'",
+    "prettier:write": "prettier --write './**/**.{ts,tsx}'"
+  },
+  "dependencies": {
+    "date-fns": "^2.24.0",
+    "next": "11.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-icons": "4.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.26",
+    "autoprefixer": "^10.3.6",
+    "eslint": "7.32.0",
+    "eslint-config-next": "11.1.2",
+    "eslint-config-prettier": "^8.3.0",
+    "postcss": "^8.3.8",
+    "tailwindcss": "^2.2.16",
+    "typescript": "4.4.3"
+  }
+}
