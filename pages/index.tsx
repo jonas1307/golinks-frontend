@@ -2,7 +2,7 @@ import { getYear } from "date-fns";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { FiLogIn } from "react-icons/fi";
+import { UserProfile } from "../components/UserProfile";
 
 const Home: NextPage = () => {
   return (
@@ -17,10 +17,9 @@ const Home: NextPage = () => {
           <Link href="/">golinks</Link>
         </h1>
 
-        <button className="flex items-center space-x-2 border border-gray-100 hover:border-gray-200 hover:shadow-sm rounded-md py-2 px-4">
-          <FiLogIn size={18} />
-          <span>Login</span>
-        </button>
+        <div className="flex justify-end">
+          <UserProfile />
+        </div>
       </header>
 
       <main></main>
