@@ -78,7 +78,7 @@ const Home: NextPage = () => {
 
       <footer className="h-8 flex items-center justify-center">
         <span className="text-xs md:text-base">
-          &copy; {getYear(Date.now())} Jonas Amorim.
+          &copy; 2021-{getYear(Date.now())} Jonas Amorim.
         </span>
       </footer>
     </div>
