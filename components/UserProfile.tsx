@@ -20,8 +20,8 @@ export const UserProfile: FunctionComponent = () => {
         <Image
           src={user.picture}
           alt={user.name || "User image"}
-          width="40px"
-          height="40px"
+          width="40"
+          height="40"
           className="rounded-full"
         />
       )}
