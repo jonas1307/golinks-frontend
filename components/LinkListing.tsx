@@ -10,7 +10,7 @@ export const LinkListing: FunctionComponent = () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/Actions/GetLinksWithMetrics`
       );
-      setLinks(await res.json());
+      setLinks((await res.json()).data);
     };
 
     fetchData();
@@ -24,7 +24,10 @@ export const LinkListing: FunctionComponent = () => {
     <>
       {links &&
         links.map((link) => (
-          <div className="w-5/6 lg:w-1/2 px-4 py-2 m-auto border border-gray-200 rounded-md md:flex md:justify-between shadow-md">
+          <div
+            key={link.id}
+            className="w-5/6 lg:w-1/2 px-4 py-2 m-auto border border-gray-200 rounded-md md:flex md:justify-between shadow-md"
+          >
             <div className="grid auto-rows-min gap-2 lg:gap-4 h-32 md:flex-1">
               <div className="whitespace-nowrap overflow-ellipsis overflow-hidden">
                 <h2 className="text-2xl font-bold">
