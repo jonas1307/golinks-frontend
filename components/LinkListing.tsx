@@ -43,11 +43,7 @@ export const LinkListing: FunctionComponent = () => {
               <div className="items-start self-end">
                 <p className="text-xs">
                   Total Usage:{" "}
-                  <span className="font-bold">
-                    {link.metrics.reduce((sum, item) => {
-                      return sum + item.totalClicks;
-                    }, 0)}
-                  </span>
+                  <span className="font-bold">{link.totalUsage}</span>
                 </p>
               </div>
             </div>
