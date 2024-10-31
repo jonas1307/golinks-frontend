@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { IMetric } from "../interfaces/IMetric";
 import { eachDayOfInterval, format, sub } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 export interface IActivityChart {
   minHeight?: string;
@@ -14,9 +15,11 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
 }) => {
   const now = new Date();
 
+  const nowUtc = toZonedTime(now, "UTC");
+
   const days = eachDayOfInterval({
-    end: now,
-    start: sub(now, {
+    end: nowUtc,
+    start: sub(nowUtc, {
       days: 30,
     }),
   });
