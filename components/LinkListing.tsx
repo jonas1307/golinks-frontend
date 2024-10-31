@@ -3,7 +3,7 @@ import { ActivityChart } from "./ActivityChart";
 import { ILink } from "../interfaces/ILink";
 
 export const LinkListing: FunctionComponent = () => {
-  const [links, setLinks] = useState<ILink[] | null>(null);
+  const [links, setLinks] = useState<ILink[] | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
