@@ -33,9 +33,7 @@ export const LinkListing: FunctionComponent = () => {
                 <h2 className="text-2xl font-bold">
                   <a href={`/${link.slug}`}>go/{link.slug}</a>
                 </h2>
-                <a href={link.url} className="text-xs">
-                  {link.url}
-                </a>
+                <span className="text-xs">{link.url}</span>
               </div>
               <div className="self-center">
                 <p className="text-sm font-medium">{link.description}</p>
