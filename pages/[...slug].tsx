@@ -14,10 +14,10 @@ const SlugPage = ({ slug }: SlugPageProps) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { slug } = context.params as { slug: string };
-  const contextAlias = context.query.alias as string[];
+  const contextAlias = context.query.slug as string[];
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/Actions/RegisterAccess/${slug}`
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/Actions/RegisterAccess/${slug[0]}`
   );
 
   if (res.status === 200) {
