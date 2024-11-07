@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from "react";
 import {
-Area,
-AreaChart,
-ResponsiveContainer,
-Tooltip,
-XAxis,
+  Area,
+  AreaChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
   YAxis,
 } from "recharts";
 import { IMetric } from "../interfaces/IMetric";
@@ -31,6 +31,9 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
     }),
   });
 
+  var upperValue = 1;
+  var lowerValue = -1;
+
   const data = days.map((day) => ({
     date: format(day, "yyyy/MM/dd"),
     count: 0,
@@ -43,6 +46,9 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
         data[idx].count = metric.totalClicks;
       }
     });
+
+    upperValue = Math.max(...data.map((item) => item.count)) * 1.01;
+    lowerValue = -upperValue;
   }
 
   return (
@@ -55,7 +61,7 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
           </linearGradient>
         </defs>
         <XAxis dataKey="date" hide={true} />
-        <YAxis hide={true} />
+        <YAxis hide={true} domain={[lowerValue, upperValue]} />
         <Tooltip />
         <Area
           type="monotone"
