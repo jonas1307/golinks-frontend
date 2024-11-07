@@ -20,7 +20,12 @@ export const LinkListing: FunctionComponent = () => {
   if (!links) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <SyncLoader margin={5} size={10} speedMultiplier={0.5} />
+        <SyncLoader
+          margin={5}
+          size={10}
+          speedMultiplier={0.5}
+          color="#0d9488"
+        />
       </div>
     );
   }
