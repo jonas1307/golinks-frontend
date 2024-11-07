@@ -1,6 +1,7 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { ActivityChart } from "./ActivityChart";
 import { ILink } from "../interfaces/ILink";
+import SyncLoader from "react-spinners/SyncLoader";
 
 export const LinkListing: FunctionComponent = () => {
   const [links, setLinks] = useState<ILink[] | undefined>(undefined);
@@ -17,7 +18,11 @@ export const LinkListing: FunctionComponent = () => {
   }, []);
 
   if (!links) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <SyncLoader margin={5} size={10} speedMultiplier={0.5} />
+      </div>
+    );
   }
 
   return (
