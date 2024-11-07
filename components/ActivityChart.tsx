@@ -1,5 +1,12 @@
 import React, { FunctionComponent } from "react";
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import {
+Area,
+AreaChart,
+ResponsiveContainer,
+Tooltip,
+XAxis,
+  YAxis,
+} from "recharts";
 import { IMetric } from "../interfaces/IMetric";
 import { eachDayOfInterval, format, sub } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
@@ -47,7 +54,8 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
             <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <XAxis dataKey="date" tick={false} stroke="none" />
+        <XAxis dataKey="date" hide={true} />
+        <YAxis hide={true} />
         <Tooltip />
         <Area
           type="monotone"
