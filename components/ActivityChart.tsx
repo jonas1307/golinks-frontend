@@ -14,11 +14,13 @@ import { toZonedTime } from "date-fns-tz";
 export interface IActivityChart {
   minHeight?: string;
   metrics?: IMetric[];
+  metricRange: string;
 }
 
 export const ActivityChart: FunctionComponent<IActivityChart> = ({
   minHeight,
   metrics,
+  metricRange,
 }) => {
   const now = new Date();
 
@@ -27,7 +29,7 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
   const days = eachDayOfInterval({
     end: nowUtc,
     start: sub(nowUtc, {
-      days: 30,
+      days: parseInt(metricRange),
     }),
   });
 

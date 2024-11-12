@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { getYear } from "date-fns";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { UserProfile } from "../components/UserProfile";
 import { LinkListing } from "../components/LinkListing";
+import { LinkFilters } from "../components/LinkFilters";
 
 const Home: NextPage = () => {
+  const [metricRange, setMetricRange] = useState<string>("30");
+
   return (
     <div className="container mx-auto px-2 xl:px-0">
       <Head>
@@ -25,7 +28,11 @@ const Home: NextPage = () => {
       </header>
 
       <main className="w-full py-8 space-y-10">
-        <LinkListing />
+        <LinkFilters
+          metricRange={metricRange}
+          setMetricRange={setMetricRange}
+        />
+        <LinkListing metricRange={metricRange} />
       </main>
 
       <footer className="h-8 flex items-center justify-center">

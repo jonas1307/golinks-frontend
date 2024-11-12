@@ -3,19 +3,25 @@ import { ActivityChart } from "./ActivityChart";
 import { ILink } from "../interfaces/ILink";
 import SyncLoader from "react-spinners/SyncLoader";
 
-export const LinkListing: FunctionComponent = () => {
+export interface ILinkListingProps {
+  metricRange: string;
+}
+
+export const LinkListing: FunctionComponent<ILinkListingProps> = ({
+  metricRange,
+}) => {
   const [links, setLinks] = useState<ILink[] | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/Actions/GetLinksWithMetrics`
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/Actions/GetLinksWithMetrics?MetricRange=${metricRange}`
       );
       setLinks((await res.json()).data);
     };
 
     fetchData();
-  }, []);
+  }, [metricRange]);
 
   if (!links) {
     return (
@@ -57,7 +63,11 @@ export const LinkListing: FunctionComponent = () => {
             </div>
 
             <div className="border-t mt-2 pt-2 md:border-t-0 md:mt-0 md:pt-0 md:border-l md:pl-2 md:ml-2 md:w-56 border-gray-200 flex items-center justify-center">
-              <ActivityChart minHeight="128px" metrics={link.metrics} />
+              <ActivityChart
+                minHeight="128px"
+                metrics={link.metrics}
+                metricRange={metricRange}
+              />
             </div>
           </div>
         ))}
