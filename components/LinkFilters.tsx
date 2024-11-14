@@ -17,7 +17,7 @@ export const LinkFilters: FunctionComponent<ILinkFiltersProps> = ({
   ];
 
   return (
-    <div>
+    <div className="flex justify-end ">
       <SelectComponent
         id="MetricRange"
         options={selectOptions}

@@ -40,14 +40,14 @@ export const SelectComponent: FunctionComponent<SelectProps> = ({
   };
 
   return (
-    <>
+    <div className="flex items-center space-x-1">
       {label && (
         <label htmlFor={id} className="text-sm font-medium text-gray-700">
           {label}:
         </label>
       )}
       <select
-        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600"
+        className="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600"
         value={selectedOption}
         onChange={handleChange}
         id={id}
@@ -61,6 +61,6 @@ export const SelectComponent: FunctionComponent<SelectProps> = ({
           </option>
         ))}
       </select>
-    </>
+    </div>
   );
 };
