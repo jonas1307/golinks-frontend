@@ -2,13 +2,25 @@ import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import type { AppProps } from "next/app";
 import { UserProvider } from "@auth0/nextjs-auth0";
-import { ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserProvider>
       <Component {...pageProps} />
-      <ToastContainer />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Slide}
+      />
     </UserProvider>
   );
 }
