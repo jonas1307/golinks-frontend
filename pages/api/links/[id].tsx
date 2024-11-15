@@ -37,7 +37,7 @@ export default withApiAuthRequired(async (req, res) => {
       return res.status(response.status).json(await response.json());
 
     default:
-      res.setHeader("Allow", ["GET"]);
+      res.setHeader("Allow", ["GET", "PUT"]);
       res.status(405).end(`Method ${req.method} Not Allowed`);
       return res;
   }
