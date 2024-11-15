@@ -6,9 +6,15 @@ import Link from "next/link";
 import { UserProfile } from "../components/UserProfile";
 import { LinkListing } from "../components/LinkListing";
 import { LinkFilters } from "../components/LinkFilters";
+import { FiPlus } from "react-icons/fi";
+import { FloatingButton } from "../components/FloatingButton";
+import { LinkForm } from "../components/LinkForm";
 
 const Home: NextPage = () => {
   const [metricRange, setMetricRange] = useState<string>("30");
+  const [isLinkFormOpen, setIsLinkFormOpen] = useState<boolean>(false);
+
+  const openLinkForm = () => setIsLinkFormOpen(true);
 
   return (
     <div className="container mx-auto px-2 xl:px-0">
@@ -40,6 +46,13 @@ const Home: NextPage = () => {
           &copy; 2021-{getYear(Date.now())} Jonas Amorim.
         </span>
       </footer>
+
+      <FloatingButton Icon={FiPlus} action={openLinkForm} />
+
+      <LinkForm
+        isLinkFormOpen={isLinkFormOpen}
+        setIsLinkFormOpen={setIsLinkFormOpen}
+      />
     </div>
   );
 };
