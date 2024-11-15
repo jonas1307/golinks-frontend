@@ -63,11 +63,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
             </div>
 
             <div className="border-t mt-2 pt-2 md:border-t-0 md:mt-0 md:pt-0 md:border-l md:pl-2 md:ml-2 md:w-56 border-gray-200 flex items-center justify-center">
-              <ActivityChart
-                minHeight="128px"
-                metrics={link.metrics}
-                metricRange={metricRange}
-              />
+              <ActivityChart metrics={link.metrics} metricRange={metricRange} />
             </div>
           </div>
         ))}
