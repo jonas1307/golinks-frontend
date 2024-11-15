@@ -14,11 +14,15 @@ import { toZonedTime } from "date-fns-tz";
 export interface IActivityChart {
   metrics?: IMetric[];
   metricRange: string;
+  baseValue?: number;
+  aspect?: number;
 }
 
 export const ActivityChart: FunctionComponent<IActivityChart> = ({
   metrics,
   metricRange,
+  baseValue,
+  aspect = 1,
 }) => {
   const now = new Date();
 
@@ -51,8 +55,12 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
     lowerValue = -upperValue;
   }
 
+  if (baseValue !== undefined) {
+    lowerValue = baseValue;
+  }
+
   return (
-    <ResponsiveContainer width="100%" aspect={1}>
+    <ResponsiveContainer aspect={aspect}>
       <AreaChart data={data} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
         <defs>
           <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">

@@ -61,7 +61,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
           <div className="flex items-center justify-center">Actions</div>
         )}
       </div>
-      <div className="">
+      <div className="space-y-8 md:space-x-0">
         {links &&
           links.map((link) => (
             <>
@@ -108,30 +108,40 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
 
               <div
                 key={uuidv4()}
-                className="w-5/6 lg:w-1/2 px-4 py-2 m-auto border border-gray-200 rounded-md block md:hidden md:justify-between shadow-md"
+                className="block md:hidden px-4 py-2 m-auto w-5/6 border border-gray-200 rounded-md shadow-md"
               >
-                <div className="grid auto-rows-min gap-2 lg:gap-4 h-32 md:flex-1">
-                  <div className="whitespace-nowrap overflow-ellipsis overflow-hidden">
-                    <h2 className="text-2xl font-bold">
-                      <a href={`/${link.slug}`}>go/{link.slug}</a>
-                    </h2>
-                    <span className="text-xs">{link.url}</span>
-                  </div>
-                  <div className="self-center">
-                    <p className="text-sm font-medium">{link.description}</p>
-                  </div>
-                  <div className="items-start self-end">
-                    <p className="text-xs">
-                      Total Usage:{" "}
-                      <span className="font-bold">{link.totalUsage}</span>
-                    </p>
-                  </div>
+                <div className="flex items-center justify-between h-10">
+                  <h2 className="text-2xl font-bold">
+                    <a href={`/${link.slug}`}>go/{link.slug}</a>
+                  </h2>
+
+                  {isAdmin && (
+                    <button
+                      className="p-2 rounded-md bg-teal-600 text-white"
+                      onClick={() => openLinkFormEdition(link.id)}
+                    >
+                      <FiEdit />
+                    </button>
+                  )}
                 </div>
 
-                <div className="border-t mt-2 pt-2 md:border-t-0 md:mt-0 md:pt-0 md:border-l md:pl-2 md:ml-2 md:w-56 border-gray-200 flex items-center justify-center">
+                <div className="my-2 whitespace-nowrap overflow-ellipsis overflow-hidden">
+                  <span className="text-xs">{link.url}</span>
+                </div>
+
+                <div className="my-4">
+                  <p className="text-xs">
+                    Total Usage:{" "}
+                    <span className="font-bold">{link.totalUsage}</span>
+                  </p>
+                </div>
+
+                <div className="border-t mt-2 pt-2 w-50 md:border-t-0 md:mt-0 md:pt-0 md:border-l md:pl-2 md:ml-2 border-gray-200">
                   <ActivityChart
                     metrics={link.metrics}
                     metricRange={metricRange}
+                    baseValue={0}
+                    aspect={1.75}
                   />
                 </div>
               </div>
