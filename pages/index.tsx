@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { getYear } from "date-fns";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { UserProfile } from "../components/UserProfile";
@@ -9,8 +9,14 @@ import { LinkFilters } from "../components/LinkFilters";
 import { FiPlus } from "react-icons/fi";
 import { FloatingButton } from "../components/FloatingButton";
 import { LinkForm } from "../components/LinkForm";
+import { getAccessToken } from "@auth0/nextjs-auth0";
+import { hasPermission } from "../utils/hasPermission";
 
-const Home: NextPage = () => {
+interface PageProps {
+  isAdmin: boolean;
+}
+
+const Home: NextPage<PageProps> = ({ isAdmin }) => {
   const [metricRange, setMetricRange] = useState<string>("30");
   const [isLinkFormOpen, setIsLinkFormOpen] = useState<boolean>(false);
 
@@ -47,14 +53,39 @@ const Home: NextPage = () => {
         </span>
       </footer>
 
-      <FloatingButton Icon={FiPlus} action={openLinkForm} />
+      {isAdmin && <FloatingButton Icon={FiPlus} action={openLinkForm} />}
 
-      <LinkForm
-        isLinkFormOpen={isLinkFormOpen}
-        setIsLinkFormOpen={setIsLinkFormOpen}
-      />
+      {isAdmin && (
+        <LinkForm
+          action="CREATE"
+          isLinkFormOpen={isLinkFormOpen}
+          setIsLinkFormOpen={setIsLinkFormOpen}
+        />
+      )}
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<PageProps> = async (
+  context
+) => {
+  try {
+    const { accessToken } = await getAccessToken(context.req, context.res, {
+      scopes: ["golinks:user"],
+    });
+
+    return {
+      props: {
+        isAdmin: hasPermission(accessToken || "", "golinks:admin"),
+      },
+    };
+  } catch {
+    return {
+      props: {
+        isAdmin: false,
+      },
+    };
+  }
 };
 
 export default Home;

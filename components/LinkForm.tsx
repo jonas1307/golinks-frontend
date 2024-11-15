@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent } from "react";
+import { Fragment, FunctionComponent, useEffect, useState } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -6,16 +6,92 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
+import { BeatLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 interface ILinkFormProps {
+  action: string;
   isLinkFormOpen: boolean;
   setIsLinkFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const LinkForm: FunctionComponent<ILinkFormProps> = ({
+  action,
   isLinkFormOpen,
   setIsLinkFormOpen,
 }) => {
+  const [formTitle, setFormTitle] = useState<string>("Create a New Link");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [formData, setFormData] = useState({
+    id: undefined,
+    url: "",
+    slug: "",
+    description: "",
+    createdAt: undefined,
+    totalUsage: 0,
+  });
+
+  useEffect(() => {
+    if (action === "EDIT") {
+      setFormTitle("Edit Link");
+    }
+  }, [action]);
+
+  useEffect(() => {
+    resetForm();
+    setIsLoading(false);
+  }, [isLinkFormOpen]);
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const resetForm = () => {
+    setFormData({
+      id: undefined,
+      url: "",
+      slug: "",
+      description: "",
+      createdAt: undefined,
+      totalUsage: 0,
+    });
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    setIsLoading(true);
+
+    try {
+      const method = action === "EDIT" ? "PUT" : "POST";
+      const response = await fetch("/api/links", {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData, (k, v) => {
+          return v === undefined ? null : v;
+        }),
+      });
+
+      if (response.status === 400) {
+        const json = await response.json();
+        toast.error(json.errorMessage);
+      } else {
+        toast.success(
+          `Link ${action === "EDIT" ? "edited" : "created"} successfully`
+        );
+        setIsLinkFormOpen(false);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <Transition appear show={isLinkFormOpen} as={Fragment}>
@@ -52,24 +128,87 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Payment successful
+                    {formTitle}
                   </DialogTitle>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We've sent
-                      you an email with all of the details of your order.
-                    </p>
-                  </div>
+                  <form
+                    onSubmit={handleSubmit}
+                    className="max-w-lg mx-auto p-6 rounded-lg space-y-4"
+                  >
+                    <input
+                      type="hidden"
+                      id="id"
+                      name="id"
+                      value={formData.id}
+                      onChange={handleChange}
+                    />
 
-                  <div className="mt-4">
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="url"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        URL
+                      </label>
+                      <input
+                        type="url"
+                        id="url"
+                        name="url"
+                        value={formData.url}
+                        onChange={handleChange}
+                        className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600"
+                        autoComplete="off"
+                        required
+                      />
+                    </div>
+
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="slug"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        Slug
+                      </label>
+                      <input
+                        type="text"
+                        id="slug"
+                        name="slug"
+                        value={formData.slug}
+                        onChange={handleChange}
+                        className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600"
+                        autoComplete="off"
+                        required
+                      />
+                    </div>
+
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="description"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        Description
+                      </label>
+                      <input
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600"
+                        autoComplete="off"
+                        required
+                      />
+                    </div>
+
                     <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => setIsLinkFormOpen(false)}
+                      type="submit"
+                      className="w-full py-2 px-4 bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
                     >
-                      Got it, thanks!
+                      {!isLoading && (
+                        <span>{action === "EDIT" ? "Update" : "Create"}</span>
+                      )}
+                      {isLoading && <BeatLoader color="#ffffff" size={10} />}
                     </button>
-                  </div>
+                  </form>
                 </DialogPanel>
               </TransitionChild>
             </div>
