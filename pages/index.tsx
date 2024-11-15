@@ -39,12 +39,13 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
         </div>
       </header>
 
-      <main className="w-full py-8 space-y-10">
+      <main className="w-full py-4 space-y-2">
         <LinkFilters
           metricRange={metricRange}
           setMetricRange={setMetricRange}
         />
-        <LinkListing metricRange={metricRange} />
+
+        <LinkListing metricRange={metricRange} isAdmin={isAdmin} />
       </main>
 
       <footer className="h-8 flex items-center justify-center">
