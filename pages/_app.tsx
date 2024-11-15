@@ -11,7 +11,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
-        hideProgressBar
         newestOnTop={false}
         closeOnClick
         rtl={false}
@@ -20,6 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         pauseOnHover
         theme="light"
         transition={Slide}
+        limit={1}
       />
     </UserProvider>
   );
