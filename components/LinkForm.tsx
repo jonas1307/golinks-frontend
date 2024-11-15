@@ -36,6 +36,8 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
   useEffect(() => {
     if (isLinkEdit) {
       setFormTitle("Edit Link");
+    } else {
+      setFormTitle("Create a New Link");
     }
   }, [isLinkEdit]);
 
