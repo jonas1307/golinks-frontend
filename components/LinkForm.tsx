@@ -202,6 +202,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                     <button
                       type="submit"
                       className="w-full py-2 px-4 bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      disabled={isLoading}
                     >
                       {!isLoading && (
                         <span>{action === "EDIT" ? "Update" : "Create"}</span>
