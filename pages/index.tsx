@@ -18,9 +18,28 @@ interface PageProps {
 
 const Home: NextPage<PageProps> = ({ isAdmin }) => {
   const [metricRange, setMetricRange] = useState<string>("30");
-  const [isLinkFormOpen, setIsLinkFormOpen] = useState<boolean>(false);
+  const [linkFormIsOpen, setLinkFormIsOpen] = useState<boolean>(false);
+  const [linkFormIsEdit, setLinkFormIsEdit] = useState<boolean>(false);
+  const [linkFormCurrentId, setLinkFormCurrentId] = useState<
+    string | undefined
+  >(undefined);
 
-  const openLinkForm = () => setIsLinkFormOpen(true);
+  const openLinkFormCreation = () => {
+    setLinkFormIsEdit(false);
+    setLinkFormCurrentId(undefined);
+    setLinkFormIsOpen(true);
+  };
+
+  const openLinkFormEdition = (id: string) => {
+    setLinkFormIsEdit(true);
+    setLinkFormCurrentId(id);
+    setLinkFormIsOpen(true);
+  };
+
+  const closeLinkForm = () => {
+    setLinkFormCurrentId(undefined);
+    setLinkFormIsOpen(false);
+  };
 
   return (
     <div className="container mx-auto px-2 xl:px-0">
@@ -45,7 +64,11 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
           setMetricRange={setMetricRange}
         />
 
-        <LinkListing metricRange={metricRange} isAdmin={isAdmin} />
+        <LinkListing
+          metricRange={metricRange}
+          isAdmin={isAdmin}
+          openLinkFormEdition={openLinkFormEdition}
+        />
       </main>
 
       <footer className="h-8 flex items-center justify-center">
@@ -54,13 +77,16 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
         </span>
       </footer>
 
-      {isAdmin && <FloatingButton Icon={FiPlus} action={openLinkForm} />}
+      {isAdmin && (
+        <FloatingButton Icon={FiPlus} action={openLinkFormCreation} />
+      )}
 
       {isAdmin && (
         <LinkForm
-          action="CREATE"
-          isLinkFormOpen={isLinkFormOpen}
-          setIsLinkFormOpen={setIsLinkFormOpen}
+          isLinkEdit={linkFormIsEdit}
+          isLinkFormOpen={linkFormIsOpen}
+          closeLinkForm={closeLinkForm}
+          id={linkFormCurrentId}
         />
       )}
     </div>

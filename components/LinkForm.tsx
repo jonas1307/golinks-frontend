@@ -10,15 +10,17 @@ import { BeatLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 interface ILinkFormProps {
-  action: string;
+  id?: string;
+  isLinkEdit: boolean;
   isLinkFormOpen: boolean;
-  setIsLinkFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  closeLinkForm: () => void;
 }
 
 export const LinkForm: FunctionComponent<ILinkFormProps> = ({
-  action,
+  id,
+  isLinkEdit,
   isLinkFormOpen,
-  setIsLinkFormOpen,
+  closeLinkForm,
 }) => {
   const [formTitle, setFormTitle] = useState<string>("Create a New Link");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,15 +34,34 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
   });
 
   useEffect(() => {
-    if (action === "EDIT") {
+    if (isLinkEdit) {
       setFormTitle("Edit Link");
     }
-  }, [action]);
+  }, [isLinkEdit]);
 
   useEffect(() => {
     resetForm();
     setIsLoading(false);
   }, [isLinkFormOpen]);
+
+  useEffect(() => {
+    const carregarLink = async () => {
+      const response = await fetch(`/api/links/${id}`);
+      const json = await response.json();
+
+      setFormData(json.data);
+    };
+
+    if (id === undefined) return;
+
+    try {
+      setIsLoading(true);
+
+      carregarLink();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -67,8 +88,10 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     setIsLoading(true);
 
     try {
-      const method = action === "EDIT" ? "PUT" : "POST";
-      const response = await fetch("/api/links", {
+      const method = isLinkEdit ? "PUT" : "POST";
+      const url = isLinkEdit ? `/api/links/${id}` : "/api/links";
+
+      const response = await fetch(url, {
         method: method,
         headers: {
           "Content-Type": "application/json",
@@ -82,10 +105,12 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
         const json = await response.json();
         toast.error(json.errorMessage);
       } else {
-        toast.success(
-          `Link ${action === "EDIT" ? "edited" : "created"} successfully`
-        );
-        setIsLinkFormOpen(false);
+        const sucessMessage = `Link ${
+          isLinkEdit ? "edited" : "created"
+        } successfully`;
+
+        toast.success(sucessMessage);
+        closeLinkForm();
       }
     } finally {
       setIsLoading(false);
@@ -98,7 +123,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
         <Dialog
           as="div"
           className="relative z-10"
-          onClose={() => setIsLinkFormOpen(false)}
+          onClose={() => closeLinkForm()}
         >
           <TransitionChild
             as={Fragment}
@@ -205,7 +230,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                       disabled={isLoading}
                     >
                       {!isLoading && (
-                        <span>{action === "EDIT" ? "Update" : "Create"}</span>
+                        <span>{isLinkEdit ? "Update" : "Create"}</span>
                       )}
                       {isLoading && <BeatLoader color="#ffffff" size={10} />}
                     </button>

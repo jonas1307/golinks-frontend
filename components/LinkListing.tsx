@@ -8,11 +8,13 @@ import { v4 as uuidv4 } from "uuid";
 export interface ILinkListingProps {
   metricRange: string;
   isAdmin: boolean;
+  openLinkFormEdition: (id: string) => void;
 }
 
 export const LinkListing: FunctionComponent<ILinkListingProps> = ({
   metricRange,
   isAdmin,
+  openLinkFormEdition,
 }) => {
   const [links, setLinks] = useState<ILink[] | undefined>(undefined);
 
@@ -94,7 +96,10 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
 
                 {isAdmin && (
                   <div className="grid justify-center items-center">
-                    <button className="p-2 rounded-md bg-teal-600 text-white">
+                    <button
+                      className="p-2 rounded-md bg-teal-600 text-white"
+                      onClick={() => openLinkFormEdition(link.id)}
+                    >
                       <FiEdit />
                     </button>
                   </div>
