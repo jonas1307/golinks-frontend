@@ -3,6 +3,7 @@ import { ActivityChart } from "./ActivityChart";
 import { ILink } from "../interfaces/ILink";
 import SyncLoader from "react-spinners/SyncLoader";
 import { FiEdit } from "react-icons/fi";
+import { v4 as uuidv4 } from "uuid";
 
 export interface ILinkListingProps {
   metricRange: string;
@@ -63,7 +64,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
           links.map((link) => (
             <>
               <div
-                key={link.id}
+                key={uuidv4()}
                 className="py-3 hidden md:grid grid-cols-7 gap-x-3 border border-t-0 border-slate-300"
               >
                 <div className="grid justify-center items-center">
@@ -101,7 +102,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
               </div>
 
               <div
-                key={link.id}
+                key={uuidv4()}
                 className="w-5/6 lg:w-1/2 px-4 py-2 m-auto border border-gray-200 rounded-md block md:hidden md:justify-between shadow-md"
               >
                 <div className="grid auto-rows-min gap-2 lg:gap-4 h-32 md:flex-1">
