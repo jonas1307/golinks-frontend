@@ -54,7 +54,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
         setIsLoading(true);
         const response = await fetch(`/api/links/${id}`);
         const json = await response.json();
-        setFormData(json.data);
+        setFormData(json);
       } finally {
         setIsLoading(false);
       }
