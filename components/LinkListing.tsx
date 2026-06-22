@@ -55,6 +55,14 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
     );
   }
 
+  if (links.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-16 text-gray-500">
+        <p>No links found.</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="py-2 hidden md:grid grid-cols-7 gap-x-3 rounded-t-xl border border-slate-300 bg-gray-50 uppercase text-sm text-gray-800">
