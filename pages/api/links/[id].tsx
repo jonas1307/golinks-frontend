@@ -12,7 +12,7 @@ export default withApiAuthRequired(async (req, res) => {
 
   switch (req.method) {
     case "GET":
-      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/Links/${id}`);
+      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/links/${id}`);
       response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -22,7 +22,7 @@ export default withApiAuthRequired(async (req, res) => {
       return res.status(response.status).json(await response.json());
 
     case "PUT":
-      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/Links/${id}`);
+      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/links/${id}`);
       response = await fetch(url, {
         method: "PUT",
         headers: {
@@ -37,7 +37,7 @@ export default withApiAuthRequired(async (req, res) => {
       return res.status(response.status).json(await response.json());
 
     case "DELETE":
-      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/Links/${id}`);
+      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/links/${id}`);
       response = await fetch(url, {
         method: "DELETE",
         headers: {

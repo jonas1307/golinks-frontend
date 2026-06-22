@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { getYear } from "date-fns";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { UserProfile } from "../components/UserProfile";
 import { LinkListing } from "../components/LinkListing";
 import { LinkFilters } from "../components/LinkFilters";
@@ -18,12 +19,21 @@ interface PageProps {
 }
 
 const Home: NextPage<PageProps> = ({ isAdmin }) => {
+  const router = useRouter();
+  const currentPage = Number(router.query.page ?? 1);
+
   const [metricRange, setMetricRange] = useState<string>("30");
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [linkFormIsOpen, setLinkFormIsOpen] = useState<boolean>(false);
   const [linkFormIsEdit, setLinkFormIsEdit] = useState<boolean>(false);
   const [linkFormCurrentId, setLinkFormCurrentId] = useState<
     string | undefined
   >(undefined);
+
+  const handlePaginationChange = useCallback(
+    (pages: number) => setTotalPages(pages),
+    []
+  );
 
   const openLinkFormCreation = () => {
     setLinkFormIsEdit(false);
@@ -68,11 +78,13 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
         <LinkListing
           metricRange={metricRange}
           isAdmin={isAdmin}
+          page={currentPage}
           openLinkFormEdition={openLinkFormEdition}
+          onPaginationChange={handlePaginationChange}
         />
 
         <div>
-          <LinkPagination currentPage={1} totalPages={10} />
+          <LinkPagination currentPage={currentPage} totalPages={totalPages} />
         </div>
       </main>
 

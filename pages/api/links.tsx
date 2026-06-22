@@ -12,7 +12,7 @@ export default withApiAuthRequired(async (req, res) => {
 
   switch (req.method) {
     case "GET":
-      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/Links`);
+      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/links`);
       Object.keys(query).forEach((key) =>
         url.searchParams.append(key, query[key])
       );
@@ -26,7 +26,7 @@ export default withApiAuthRequired(async (req, res) => {
       return res.status(response.status).json(await response.json());
 
     case "POST":
-      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/Links`);
+      url = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/links`);
       Object.keys(query).forEach((key) =>
         url.searchParams.append(key, query[key])
       );

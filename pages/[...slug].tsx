@@ -17,12 +17,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const contextAlias = context.query.slug as string[];
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/Actions/RegisterAccess/${slug[0]}`
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/links/register-access/${slug[0]}`,
+    { method: "POST" }
   );
 
   if (res.status === 200) {
     const response = context.res;
-    const link = (await res.json()).data;
+    const link = await res.json();
 
     response.writeHead(302, {
       Location: createRedirectUrl({

@@ -98,14 +98,16 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData, (k, v) => {
-          return v === undefined ? null : v;
+        body: JSON.stringify({
+          url: formData.url,
+          slug: formData.slug,
+          description: formData.description,
         }),
       });
 
-      if (response.status === 400) {
+      if (!response.ok) {
         const json = await response.json();
-        toast.error(json.errorMessage);
+        toast.error(json.detail ?? "An unexpected error occurred.");
       } else {
         const sucessMessage = `Link ${
           isLinkEdit ? "edited" : "created"

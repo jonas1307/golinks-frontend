@@ -1,32 +1,44 @@
 import { Fragment, FunctionComponent, useEffect, useState } from "react";
 import { ActivityChart } from "./ActivityChart";
 import { ILink } from "../interfaces/ILink";
+import { IPagedResult } from "../interfaces/IPagedResult";
 import SyncLoader from "react-spinners/SyncLoader";
 import { FiEdit } from "react-icons/fi";
 
 export interface ILinkListingProps {
   metricRange: string;
   isAdmin: boolean;
+  page: number;
   openLinkFormEdition: (id: string) => void;
+  onPaginationChange: (totalPages: number, currentPage: number) => void;
 }
 
 export const LinkListing: FunctionComponent<ILinkListingProps> = ({
   metricRange,
   isAdmin,
+  page,
   openLinkFormEdition,
+  onPaginationChange,
 }) => {
   const [links, setLinks] = useState<ILink[] | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/Actions/GetLinksWithMetrics?MetricRange=${metricRange}`
-      );
-      setLinks((await res.json()).data);
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/links/metrics?metricRange=${metricRange}&pageNumber=${page}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch links");
+        const data: IPagedResult<ILink> = await res.json();
+        setLinks(data.items);
+        onPaginationChange(data.totalPages, data.pageNumber);
+      } catch {
+        setLinks([]);
+      }
     };
 
     fetchData();
-  }, [metricRange]);
+  }, [metricRange, page]);
 
   if (!links) {
     return (
