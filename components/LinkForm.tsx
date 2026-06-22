@@ -14,6 +14,7 @@ interface ILinkFormProps {
   isLinkEdit: boolean;
   isLinkFormOpen: boolean;
   closeLinkForm: () => void;
+  onLinkSaved: () => void;
 }
 
 export const LinkForm: FunctionComponent<ILinkFormProps> = ({
@@ -21,6 +22,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
   isLinkEdit,
   isLinkFormOpen,
   closeLinkForm,
+  onLinkSaved,
 }) => {
   const [formTitle, setFormTitle] = useState<string>("Create a New Link");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -112,7 +114,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
         } successfully`;
 
         toast.success(sucessMessage);
-        closeLinkForm();
+        onLinkSaved();
       }
     } finally {
       setIsLoading(false);

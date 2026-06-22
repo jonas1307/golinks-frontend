@@ -24,6 +24,7 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
 
   const [metricRange, setMetricRange] = useState<string>("30");
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
   const [linkFormIsOpen, setLinkFormIsOpen] = useState<boolean>(false);
   const [linkFormIsEdit, setLinkFormIsEdit] = useState<boolean>(false);
   const [linkFormCurrentId, setLinkFormCurrentId] = useState<
@@ -50,6 +51,11 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
   const closeLinkForm = () => {
     setLinkFormCurrentId(undefined);
     setLinkFormIsOpen(false);
+  };
+
+  const onLinkSaved = () => {
+    closeLinkForm();
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   return (
@@ -79,6 +85,7 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
           metricRange={metricRange}
           isAdmin={isAdmin}
           page={currentPage}
+          refreshTrigger={refreshTrigger}
           openLinkFormEdition={openLinkFormEdition}
           onPaginationChange={handlePaginationChange}
         />
@@ -103,6 +110,7 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
           isLinkEdit={linkFormIsEdit}
           isLinkFormOpen={linkFormIsOpen}
           closeLinkForm={closeLinkForm}
+          onLinkSaved={onLinkSaved}
           id={linkFormCurrentId}
         />
       )}

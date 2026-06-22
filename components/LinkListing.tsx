@@ -9,6 +9,7 @@ export interface ILinkListingProps {
   metricRange: string;
   isAdmin: boolean;
   page: number;
+  refreshTrigger: number;
   openLinkFormEdition: (id: string) => void;
   onPaginationChange: (totalPages: number, currentPage: number) => void;
 }
@@ -17,6 +18,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
   metricRange,
   isAdmin,
   page,
+  refreshTrigger,
   openLinkFormEdition,
   onPaginationChange,
 }) => {
@@ -38,7 +40,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
     };
 
     fetchData();
-  }, [metricRange, page]);
+  }, [metricRange, page, refreshTrigger]);
 
   if (!links) {
     return (
