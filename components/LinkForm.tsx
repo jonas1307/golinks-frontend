@@ -47,22 +47,20 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
   }, [isLinkFormOpen]);
 
   useEffect(() => {
-    const carregarLink = async () => {
-      const response = await fetch(`/api/links/${id}`);
-      const json = await response.json();
-
-      setFormData(json.data);
-    };
-
     if (id === undefined) return;
 
-    try {
-      setIsLoading(true);
+    const carregarLink = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/links/${id}`);
+        const json = await response.json();
+        setFormData(json.data);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      await carregarLink();
-    } finally {
-      setIsLoading(false);
-    }
+    carregarLink();
   }, [id]);
 
   const handleChange = (e: any) => {
