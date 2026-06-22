@@ -24,38 +24,38 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
 
   const [metricRange, setMetricRange] = useState<string>("30");
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
-  const [linkFormIsOpen, setLinkFormIsOpen] = useState<boolean>(false);
-  const [linkFormIsEdit, setLinkFormIsEdit] = useState<boolean>(false);
-  const [linkFormCurrentId, setLinkFormCurrentId] = useState<
-    string | undefined
-  >(undefined);
+  const [listVersion, setListVersion] = useState<number>(0);
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [selectedLinkId, setSelectedLinkId] = useState<string | undefined>(
+    undefined
+  );
 
   const handlePaginationChange = useCallback(
     (pages: number) => setTotalPages(pages),
     []
   );
 
-  const openLinkFormCreation = () => {
-    setLinkFormIsEdit(false);
-    setLinkFormCurrentId(undefined);
-    setLinkFormIsOpen(true);
+  const openNewLink = () => {
+    setIsEditMode(false);
+    setSelectedLinkId(undefined);
+    setIsFormOpen(true);
   };
 
-  const openLinkFormEdition = (id: string) => {
-    setLinkFormIsEdit(true);
-    setLinkFormCurrentId(id);
-    setLinkFormIsOpen(true);
+  const openEditLink = (id: string) => {
+    setIsEditMode(true);
+    setSelectedLinkId(id);
+    setIsFormOpen(true);
   };
 
-  const closeLinkForm = () => {
-    setLinkFormCurrentId(undefined);
-    setLinkFormIsOpen(false);
+  const handleFormClose = () => {
+    setSelectedLinkId(undefined);
+    setIsFormOpen(false);
   };
 
-  const onLinkSaved = () => {
-    closeLinkForm();
-    setRefreshTrigger((prev) => prev + 1);
+  const handleLinkSaved = () => {
+    handleFormClose();
+    setListVersion((prev) => prev + 1);
   };
 
   return (
@@ -85,8 +85,8 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
           metricRange={metricRange}
           isAdmin={isAdmin}
           page={currentPage}
-          refreshTrigger={refreshTrigger}
-          openLinkFormEdition={openLinkFormEdition}
+          listVersion={listVersion}
+          onEditLink={openEditLink}
           onPaginationChange={handlePaginationChange}
         />
 
@@ -102,16 +102,16 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
       </footer>
 
       {isAdmin && (
-        <FloatingButton Icon={FiPlus} action={openLinkFormCreation} />
+        <FloatingButton Icon={FiPlus} action={openNewLink} />
       )}
 
       {isAdmin && (
         <LinkForm
-          isLinkEdit={linkFormIsEdit}
-          isLinkFormOpen={linkFormIsOpen}
-          closeLinkForm={closeLinkForm}
-          onLinkSaved={onLinkSaved}
-          id={linkFormCurrentId}
+          isEditMode={isEditMode}
+          isOpen={isFormOpen}
+          onClose={handleFormClose}
+          onSave={handleLinkSaved}
+          id={selectedLinkId}
         />
       )}
     </div>

@@ -11,18 +11,18 @@ import { toast } from "react-toastify";
 
 interface ILinkFormProps {
   id?: string;
-  isLinkEdit: boolean;
-  isLinkFormOpen: boolean;
-  closeLinkForm: () => void;
-  onLinkSaved: () => void;
+  isEditMode: boolean;
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: () => void;
 }
 
 export const LinkForm: FunctionComponent<ILinkFormProps> = ({
   id,
-  isLinkEdit,
-  isLinkFormOpen,
-  closeLinkForm,
-  onLinkSaved,
+  isEditMode,
+  isOpen,
+  onClose,
+  onSave,
 }) => {
   const [formTitle, setFormTitle] = useState<string>("Create a New Link");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,22 +36,18 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
   });
 
   useEffect(() => {
-    if (isLinkEdit) {
-      setFormTitle("Edit Link");
-    } else {
-      setFormTitle("Create a New Link");
-    }
-  }, [isLinkEdit]);
+    setFormTitle(isEditMode ? "Edit Link" : "Create a New Link");
+  }, [isEditMode]);
 
   useEffect(() => {
     resetForm();
     setIsLoading(false);
-  }, [isLinkFormOpen]);
+  }, [isOpen]);
 
   useEffect(() => {
     if (id === undefined) return;
 
-    const carregarLink = async () => {
+    const loadLink = async () => {
       try {
         setIsLoading(true);
         const response = await fetch(`/api/links/${id}`);
@@ -62,7 +58,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
       }
     };
 
-    carregarLink();
+    loadLink();
   }, [id]);
 
   const handleChange = (e: any) => {
@@ -90,8 +86,8 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     setIsLoading(true);
 
     try {
-      const method = isLinkEdit ? "PUT" : "POST";
-      const url = isLinkEdit ? `/api/links/${id}` : "/api/links";
+      const method = isEditMode ? "PUT" : "POST";
+      const url = isEditMode ? `/api/links/${id}` : "/api/links";
 
       const response = await fetch(url, {
         method: method,
@@ -107,14 +103,15 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
 
       if (!response.ok) {
         const json = await response.json();
-        toast.error(json.detail ?? "An unexpected error occurred.");
+        const message =
+          json.detail ??
+          (json.errors
+            ? (Object.values(json.errors) as string[][]).flat().join(" ")
+            : "An unexpected error occurred.");
+        toast.error(message);
       } else {
-        const sucessMessage = `Link ${
-          isLinkEdit ? "edited" : "created"
-        } successfully`;
-
-        toast.success(sucessMessage);
-        onLinkSaved();
+        toast.success(`Link ${isEditMode ? "edited" : "created"} successfully`);
+        onSave();
       }
     } finally {
       setIsLoading(false);
@@ -123,11 +120,11 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
 
   return (
     <>
-      <Transition appear show={isLinkFormOpen} as={Fragment}>
+      <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
           className="relative z-10"
-          onClose={() => closeLinkForm()}
+          onClose={onClose}
         >
           <TransitionChild
             as={Fragment}
@@ -234,7 +231,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                       disabled={isLoading}
                     >
                       {!isLoading && (
-                        <span>{isLinkEdit ? "Update" : "Create"}</span>
+                        <span>{isEditMode ? "Update" : "Create"}</span>
                       )}
                       {isLoading && <BeatLoader color="#ffffff" size={10} />}
                     </button>
