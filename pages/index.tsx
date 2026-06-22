@@ -11,6 +11,7 @@ import { FloatingButton } from "../components/FloatingButton";
 import { LinkForm } from "../components/LinkForm";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { hasPermission } from "../utils/hasPermission";
+import { LinkPagination } from "../components/LinkPagination";
 
 interface PageProps {
   isAdmin: boolean;
@@ -69,6 +70,10 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
           isAdmin={isAdmin}
           openLinkFormEdition={openLinkFormEdition}
         />
+
+        <div>
+          <LinkPagination currentPage={1} totalPages={10} />
+        </div>
       </main>
 
       <footer className="h-8 flex items-center justify-center">

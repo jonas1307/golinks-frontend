@@ -53,7 +53,7 @@ export const SelectComponent: FunctionComponent<SelectProps> = ({
         id={id}
       >
         {defaultLabel && (
-          <option value="">{<option value="">{defaultLabel}</option>}</option>
+          <option value="">{defaultLabel}</option>
         )}
         {options.map((option) => (
           <option key={option.value} value={option.value}>

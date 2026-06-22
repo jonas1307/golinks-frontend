@@ -1,9 +1,8 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { Fragment, FunctionComponent, useEffect, useState } from "react";
 import { ActivityChart } from "./ActivityChart";
 import { ILink } from "../interfaces/ILink";
 import SyncLoader from "react-spinners/SyncLoader";
 import { FiEdit } from "react-icons/fi";
-import { v4 as uuidv4 } from "uuid";
 
 export interface ILinkListingProps {
   metricRange: string;
@@ -64,9 +63,8 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
       <div className="space-y-8 md:space-x-0">
         {links &&
           links.map((link) => (
-            <>
+            <Fragment key={link.id}>
               <div
-                key={uuidv4()}
                 className="py-3 hidden md:grid grid-cols-7 gap-x-3 border border-t-0 border-slate-300"
               >
                 <div className="grid justify-center items-center">
@@ -107,7 +105,6 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
               </div>
 
               <div
-                key={uuidv4()}
                 className="block md:hidden px-4 py-2 m-auto w-5/6 border border-gray-200 rounded-md shadow-md"
               >
                 <div className="flex items-center justify-between h-10">
@@ -145,7 +142,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                   />
                 </div>
               </div>
-            </>
+            </Fragment>
           ))}
       </div>
     </div>

@@ -59,7 +59,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     try {
       setIsLoading(true);
 
-      carregarLink();
+      await carregarLink();
     } finally {
       setIsLoading(false);
     }
