@@ -25,6 +25,8 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
   const [links, setLinks] = useState<ILink[] | undefined>(undefined);
 
   useEffect(() => {
+    setLinks(undefined);
+
     const fetchData = async () => {
       try {
         const res = await fetch(
