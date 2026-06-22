@@ -23,7 +23,7 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
   const currentPage = Number(router.query.page ?? 1);
 
   const [metricRange, setMetricRange] = useState<string>("30");
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
   const [linkFormIsOpen, setLinkFormIsOpen] = useState<boolean>(false);
   const [linkFormIsEdit, setLinkFormIsEdit] = useState<boolean>(false);
@@ -90,9 +90,9 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
           onPaginationChange={handlePaginationChange}
         />
 
-        <div>
+        {totalPages > 0 && (
           <LinkPagination currentPage={currentPage} totalPages={totalPages} />
-        </div>
+        )}
       </main>
 
       <footer className="h-8 flex items-center justify-center">

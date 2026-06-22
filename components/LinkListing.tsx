@@ -38,6 +38,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
         onPaginationChange(data.totalPages, data.pageNumber);
       } catch {
         setLinks([]);
+        onPaginationChange(0, 1);
       }
     };
 
