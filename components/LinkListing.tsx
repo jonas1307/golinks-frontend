@@ -9,8 +9,8 @@ export interface ILinkListingProps {
   metricRange: string;
   isAdmin: boolean;
   page: number;
-  refreshTrigger: number;
-  openLinkFormEdition: (id: string) => void;
+  listVersion: number;
+  onEditLink: (id: string) => void;
   onPaginationChange: (totalPages: number) => void;
 }
 
@@ -18,8 +18,8 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
   metricRange,
   isAdmin,
   page,
-  refreshTrigger,
-  openLinkFormEdition,
+  listVersion,
+  onEditLink,
   onPaginationChange,
 }) => {
   const [links, setLinks] = useState<ILink[] | undefined>(undefined);
@@ -43,7 +43,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
     };
 
     fetchData();
-  }, [metricRange, page, refreshTrigger]);
+  }, [metricRange, page, listVersion]);
 
   if (!links) {
     return (
@@ -121,7 +121,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                   <div className="grid justify-center items-center">
                     <button
                       className="p-2 rounded-md bg-teal-600 text-white"
-                      onClick={() => openLinkFormEdition(link.id)}
+                      onClick={() => onEditLink(link.id)}
                     >
                       <FiEdit />
                     </button>
@@ -140,7 +140,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                   {isAdmin && (
                     <button
                       className="p-2 rounded-md bg-teal-600 text-white"
-                      onClick={() => openLinkFormEdition(link.id)}
+                      onClick={() => onEditLink(link.id)}
                     >
                       <FiEdit />
                     </button>
