@@ -13,32 +13,35 @@ const SlugPage = ({ slug }: SlugPageProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { slug } = context.params as { slug: string };
+  const { slug } = context.params as { slug: string[] };
   const contextAlias = context.query.slug as string[];
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/links/register-access/${slug[0]}`,
-    { method: "POST" }
-  );
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/links/register-access/${slug[0]}`,
+      { method: "POST" }
+    );
 
-  if (res.status === 200) {
-    const response = context.res;
-    const link = await res.json();
+    if (res.ok) {
+      const link = await res.json();
 
-    response.writeHead(302, {
-      Location: createRedirectUrl({
-        linkUrl: link.url,
-        linkAlias: link.slug,
-        contextAlias,
-      }),
-    });
+      context.res.writeHead(302, {
+        Location: createRedirectUrl({
+          linkUrl: link.url,
+          linkAlias: link.slug,
+          contextAlias,
+        }),
+      });
 
-    response.end();
+      context.res.end();
+    }
+  } catch {
+    // network or parse error — fall through to render not-found page
   }
 
   return {
     props: {
-      slug,
+      slug: slug[0],
     },
   };
 };

@@ -11,7 +11,7 @@ export interface ILinkListingProps {
   page: number;
   refreshTrigger: number;
   openLinkFormEdition: (id: string) => void;
-  onPaginationChange: (totalPages: number, currentPage: number) => void;
+  onPaginationChange: (totalPages: number) => void;
 }
 
 export const LinkListing: FunctionComponent<ILinkListingProps> = ({
@@ -35,10 +35,10 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
         if (!res.ok) throw new Error("Failed to fetch links");
         const data: IPagedResult<ILink> = await res.json();
         setLinks(data.items);
-        onPaginationChange(data.totalPages, data.pageNumber);
+        onPaginationChange(data.totalPages);
       } catch {
         setLinks([]);
-        onPaginationChange(0, 1);
+        onPaginationChange(0);
       }
     };
 
