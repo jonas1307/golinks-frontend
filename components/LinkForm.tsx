@@ -14,6 +14,7 @@ interface ILinkFormProps {
   isLinkEdit: boolean;
   isLinkFormOpen: boolean;
   closeLinkForm: () => void;
+  onLinkSaved: () => void;
 }
 
 export const LinkForm: FunctionComponent<ILinkFormProps> = ({
@@ -21,6 +22,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
   isLinkEdit,
   isLinkFormOpen,
   closeLinkForm,
+  onLinkSaved,
 }) => {
   const [formTitle, setFormTitle] = useState<string>("Create a New Link");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -47,22 +49,20 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
   }, [isLinkFormOpen]);
 
   useEffect(() => {
-    const carregarLink = async () => {
-      const response = await fetch(`/api/links/${id}`);
-      const json = await response.json();
-
-      setFormData(json.data);
-    };
-
     if (id === undefined) return;
 
-    try {
-      setIsLoading(true);
+    const carregarLink = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/links/${id}`);
+        const json = await response.json();
+        setFormData(json);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      await carregarLink();
-    } finally {
-      setIsLoading(false);
-    }
+    carregarLink();
   }, [id]);
 
   const handleChange = (e: any) => {
@@ -98,21 +98,23 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData, (k, v) => {
-          return v === undefined ? null : v;
+        body: JSON.stringify({
+          url: formData.url,
+          slug: formData.slug,
+          description: formData.description,
         }),
       });
 
-      if (response.status === 400) {
+      if (!response.ok) {
         const json = await response.json();
-        toast.error(json.errorMessage);
+        toast.error(json.detail ?? "An unexpected error occurred.");
       } else {
         const sucessMessage = `Link ${
           isLinkEdit ? "edited" : "created"
         } successfully`;
 
         toast.success(sucessMessage);
-        closeLinkForm();
+        onLinkSaved();
       }
     } finally {
       setIsLoading(false);

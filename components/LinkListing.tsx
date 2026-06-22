@@ -1,32 +1,49 @@
 import { Fragment, FunctionComponent, useEffect, useState } from "react";
 import { ActivityChart } from "./ActivityChart";
 import { ILink } from "../interfaces/ILink";
+import { IPagedResult } from "../interfaces/IPagedResult";
 import SyncLoader from "react-spinners/SyncLoader";
 import { FiEdit } from "react-icons/fi";
 
 export interface ILinkListingProps {
   metricRange: string;
   isAdmin: boolean;
+  page: number;
+  refreshTrigger: number;
   openLinkFormEdition: (id: string) => void;
+  onPaginationChange: (totalPages: number, currentPage: number) => void;
 }
 
 export const LinkListing: FunctionComponent<ILinkListingProps> = ({
   metricRange,
   isAdmin,
+  page,
+  refreshTrigger,
   openLinkFormEdition,
+  onPaginationChange,
 }) => {
   const [links, setLinks] = useState<ILink[] | undefined>(undefined);
 
   useEffect(() => {
+    setLinks(undefined);
+
     const fetchData = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/Actions/GetLinksWithMetrics?MetricRange=${metricRange}`
-      );
-      setLinks((await res.json()).data);
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/links/metrics?metricRange=${metricRange}&pageNumber=${page}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch links");
+        const data: IPagedResult<ILink> = await res.json();
+        setLinks(data.items);
+        onPaginationChange(data.totalPages, data.pageNumber);
+      } catch {
+        setLinks([]);
+        onPaginationChange(0, 1);
+      }
     };
 
     fetchData();
-  }, [metricRange]);
+  }, [metricRange, page, refreshTrigger]);
 
   if (!links) {
     return (
@@ -37,6 +54,14 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
           speedMultiplier={0.5}
           color="#0d9488"
         />
+      </div>
+    );
+  }
+
+  if (links.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-16 text-gray-500">
+        <p>No links found.</p>
       </div>
     );
   }
