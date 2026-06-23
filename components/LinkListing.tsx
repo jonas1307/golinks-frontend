@@ -99,11 +99,11 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                 </div>
 
                 <div
-                  className={`grid items-center whitespace-nowrap text-ellipsis overflow-hidden ${
+                  className={`flex items-center overflow-hidden ${
                     isAdmin ? "col-span-2" : "col-span-3"
                   }`}
                 >
-                  <span className="text-xs text-gray-800">{link.url}</span>
+                  <span className="text-xs text-gray-800 truncate">{link.url}</span>
                 </div>
 
                 <div className="grid items-center justify-center col-span-2 h-40">
@@ -147,8 +147,8 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                   )}
                 </div>
 
-                <div className="my-2 whitespace-nowrap text-ellipsis overflow-hidden">
-                  <span className="text-xs">{link.url}</span>
+                <div className="my-2 overflow-hidden">
+                  <span className="text-xs block truncate">{link.url}</span>
                 </div>
 
                 <div className="my-4">
