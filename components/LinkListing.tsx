@@ -106,10 +106,11 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                   <span className="text-xs text-gray-800 truncate">{link.url}</span>
                 </div>
 
-                <div className="grid items-center justify-center col-span-2 h-40">
+                <div className="col-span-2 h-40">
                   <ActivityChart
                     metrics={link.metrics}
                     metricRange={metricRange}
+                    height="100%"
                   />
                 </div>
 
