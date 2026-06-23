@@ -23,6 +23,7 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
   const currentPage = Number(router.query.page ?? 1);
 
   const [metricRange, setMetricRange] = useState<string>("30");
+  const [search, setSearch] = useState<string>("");
   const [totalPages, setTotalPages] = useState<number | null>(null);
   const [listVersion, setListVersion] = useState<number>(0);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
@@ -35,6 +36,13 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
     (pages: number) => setTotalPages(pages),
     []
   );
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
+    if (router.query.page) {
+      router.replace({ query: { ...router.query, page: undefined } }, undefined, { shallow: true });
+    }
+  }, [router]);
 
   const openNewLink = () => {
     setIsEditMode(false);
@@ -76,15 +84,18 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
       </header>
 
       <main className="w-full py-4 space-y-2">
-        {totalPages !== null && totalPages > 0 && (
+        {(totalPages !== null && totalPages > 0) || search ? (
           <LinkFilters
             metricRange={metricRange}
             setMetricRange={setMetricRange}
+            search={search}
+            setSearch={handleSearchChange}
           />
-        )}
+        ) : null}
 
         <LinkListing
           metricRange={metricRange}
+          search={search}
           isAdmin={isAdmin}
           page={currentPage}
           listVersion={listVersion}

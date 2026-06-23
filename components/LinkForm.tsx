@@ -1,4 +1,4 @@
-import React, { Fragment, FunctionComponent, useEffect, useState } from "react";
+import React, { Fragment, FunctionComponent, useCallback, useEffect, useState } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -45,6 +45,19 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     totalUsage: 0,
   });
 
+  const resetForm = useCallback(() => {
+    setFormData({
+      id: undefined,
+      url: "",
+      slug: "",
+      description: "",
+      expiresAt: "",
+      maxUsage: "",
+      createdAt: undefined,
+      totalUsage: 0,
+    });
+  }, []);
+
   useEffect(() => {
     setFormTitle(isEditMode ? "Edit Link" : "Create a New Link");
   }, [isEditMode]);
@@ -53,7 +66,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     resetForm();
     setFormErrors({});
     setIsLoading(false);
-  }, [isOpen]);
+  }, [isOpen, resetForm]);
 
   useEffect(() => {
     if (id === undefined) return;
@@ -80,19 +93,6 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setFormErrors((prev) => ({ ...prev, [name]: undefined }));
-  };
-
-  const resetForm = () => {
-    setFormData({
-      id: undefined,
-      url: "",
-      slug: "",
-      description: "",
-      expiresAt: "",
-      maxUsage: "",
-      createdAt: undefined,
-      totalUsage: 0,
-    });
   };
 
   const handleSubmit = async (e: any) => {

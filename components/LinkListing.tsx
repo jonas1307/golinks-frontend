@@ -38,6 +38,7 @@ const LinkStatusBadge = ({ link }: { link: ILink }) => {
 
 export interface ILinkListingProps {
   metricRange: string;
+  search: string;
   isAdmin: boolean;
   page: number;
   listVersion: number;
@@ -47,6 +48,7 @@ export interface ILinkListingProps {
 
 export const LinkListing: FunctionComponent<ILinkListingProps> = ({
   metricRange,
+  search,
   isAdmin,
   page,
   listVersion,
@@ -61,7 +63,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/metrics?metricRange=${metricRange}&pageNumber=${page}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/metrics?metricRange=${metricRange}&pageNumber=${page}${search ? `&search=${encodeURIComponent(search)}` : ""}`
         );
         if (!res.ok) throw new Error("Failed to fetch links");
         const data: IPagedResult<ILink> = await res.json();
@@ -74,7 +76,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
     };
 
     fetchData();
-  }, [metricRange, page, listVersion]);
+  }, [metricRange, search, page, listVersion, onPaginationChange]);
 
   if (!links) {
     return (
