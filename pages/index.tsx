@@ -76,7 +76,7 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
       </header>
 
       <main className="w-full py-4 space-y-2">
-        {(totalPages === null || totalPages > 0) && (
+        {totalPages !== null && totalPages > 0 && (
           <LinkFilters
             metricRange={metricRange}
             setMetricRange={setMetricRange}
