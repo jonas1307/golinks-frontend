@@ -2,17 +2,14 @@ import React, { FunctionComponent } from "react";
 import Image from "next/image";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { useUser } from "@auth0/nextjs-auth0";
-import { toast } from "react-toastify";
 
 export const UserProfile: FunctionComponent = () => {
-  const { user, error, isLoading } = useUser();
+  const { user, isLoading } = useUser();
 
   if (isLoading)
     return (
       <div className="animate-spin rounded-full h-5 w-5 border-b border-gray-900"></div>
     );
-
-  if (error) return <>{toast.error(`Sign in error: ${error.message}`)}</>;
 
   return user ? (
     <div className="flex items-center space-x-2 h-10">
