@@ -111,6 +111,7 @@ const Home: NextPage<PageProps> = ({ isAdmin, user }) => {
           page={currentPage}
           listVersion={listVersion}
           onEditLink={openEditLink}
+          onDeleteLink={() => setListVersion((prev) => prev + 1)}
           onPaginationChange={handlePaginationChange}
         />
 

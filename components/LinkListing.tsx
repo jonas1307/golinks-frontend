@@ -3,7 +3,8 @@ import { ActivityChart } from "./ActivityChart";
 import { ILink } from "../interfaces/ILink";
 import { IPagedResult } from "../interfaces/IPagedResult";
 import SyncLoader from "react-spinners/SyncLoader";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 const isLimitReached = (link: ILink) =>
   link.maxUsage != null && link.totalUsage >= link.maxUsage;
@@ -43,6 +44,7 @@ export interface ILinkListingProps {
   page: number;
   listVersion: number;
   onEditLink: (id: string) => void;
+  onDeleteLink: () => void;
   onPaginationChange: (totalPages: number) => void;
 }
 
@@ -53,9 +55,11 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
   page,
   listVersion,
   onEditLink,
+  onDeleteLink,
   onPaginationChange,
 }) => {
   const [links, setLinks] = useState<ILink[] | undefined>(undefined);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     setLinks(undefined);
@@ -77,6 +81,23 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
 
     fetchData();
   }, [metricRange, search, page, listVersion, onPaginationChange]);
+
+  const handleDelete = async (link: ILink) => {
+    if (!confirm(`Delete go/${link.slug}? This action cannot be undone.`)) return;
+    setDeletingId(link.id);
+    try {
+      const res = await fetch(`/api/links/${link.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error();
+      toast.success(`go/${link.slug} deleted.`);
+      onDeleteLink();
+    } catch {
+      toast.error("Failed to delete link.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (!links) {
     return (
@@ -157,12 +178,21 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                 </div>
 
                 {isAdmin && (
-                  <div className="grid justify-center items-center">
+                  <div className="flex justify-center items-center gap-2">
                     <button
-                      className="p-2 rounded-md bg-teal-600 text-white"
+                      className="p-2 rounded-md bg-teal-600 text-white hover:bg-teal-700"
                       onClick={() => onEditLink(link.id)}
+                      title="Edit"
                     >
                       <FiEdit />
+                    </button>
+                    <button
+                      className="p-2 rounded-md bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+                      onClick={() => handleDelete(link)}
+                      disabled={deletingId === link.id}
+                      title="Delete"
+                    >
+                      <FiTrash2 />
                     </button>
                   </div>
                 )}
@@ -180,12 +210,23 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                   </div>
 
                   {isAdmin && (
-                    <button
-                      className="p-2 rounded-md bg-teal-600 text-white"
-                      onClick={() => onEditLink(link.id)}
-                    >
-                      <FiEdit />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="p-2 rounded-md bg-teal-600 text-white hover:bg-teal-700"
+                        onClick={() => onEditLink(link.id)}
+                        title="Edit"
+                      >
+                        <FiEdit />
+                      </button>
+                      <button
+                        className="p-2 rounded-md bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+                        onClick={() => handleDelete(link)}
+                        disabled={deletingId === link.id}
+                        title="Delete"
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </div>
                   )}
                 </div>
 
