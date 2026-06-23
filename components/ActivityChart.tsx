@@ -16,7 +16,7 @@ export interface IActivityChart {
   metricRange: string;
   baseValue?: number;
   aspect?: number;
-  height?: number | string;
+  height?: number | `${number}%`;
 }
 
 export const ActivityChart: FunctionComponent<IActivityChart> = ({
