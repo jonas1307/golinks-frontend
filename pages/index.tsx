@@ -15,9 +15,10 @@ import { LinkPagination } from "../components/LinkPagination";
 
 interface PageProps {
   isAdmin: boolean;
+  user?: { picture?: string; name?: string } | null;
 }
 
-const Home: NextPage<PageProps> = ({ isAdmin }) => {
+const Home: NextPage<PageProps> = ({ isAdmin, user }) => {
   const router = useRouter();
   const currentPage = Number(router.query.page ?? 1);
 
@@ -89,7 +90,7 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
         </div>
 
         <div className="flex justify-end">
-          <UserProfile />
+          <UserProfile user={user} />
         </div>
       </header>
 
@@ -142,16 +143,19 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 ) => {
   try {
     const { token } = await auth0.getAccessToken(context.req, context.res);
+    const session = await auth0.getSession(context.req);
 
     return {
       props: {
         isAdmin: hasPermission(token || "", "golinks:admin"),
+        user: session?.user ?? null,
       },
     };
   } catch {
     return {
       props: {
         isAdmin: false,
+        user: null,
       },
     };
   }

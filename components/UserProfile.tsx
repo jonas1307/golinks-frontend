@@ -1,16 +1,12 @@
 import React, { FunctionComponent } from "react";
 import Image from "next/image";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
-import { useUser } from "@auth0/nextjs-auth0";
 
-export const UserProfile: FunctionComponent = () => {
-  const { user, isLoading } = useUser();
+interface UserProfileProps {
+  user?: { picture?: string; name?: string } | null;
+}
 
-  if (isLoading)
-    return (
-      <div className="animate-spin rounded-full h-5 w-5 border-b border-gray-900"></div>
-    );
-
+export const UserProfile: FunctionComponent<UserProfileProps> = ({ user }) => {
   return user ? (
     <div className="flex items-center space-x-2 h-10">
       {user.picture && (
