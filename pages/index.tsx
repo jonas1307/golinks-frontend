@@ -23,7 +23,7 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
   const currentPage = Number(router.query.page ?? 1);
 
   const [metricRange, setMetricRange] = useState<string>("30");
-  const [totalPages, setTotalPages] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number | null>(null);
   const [listVersion, setListVersion] = useState<number>(0);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -76,10 +76,12 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
       </header>
 
       <main className="w-full py-4 space-y-2">
-        <LinkFilters
-          metricRange={metricRange}
-          setMetricRange={setMetricRange}
-        />
+        {(totalPages === null || totalPages > 0) && (
+          <LinkFilters
+            metricRange={metricRange}
+            setMetricRange={setMetricRange}
+          />
+        )}
 
         <LinkListing
           metricRange={metricRange}
@@ -90,7 +92,7 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
           onPaginationChange={handlePaginationChange}
         />
 
-        {totalPages > 0 && (
+        {totalPages !== null && totalPages > 0 && (
           <LinkPagination currentPage={currentPage} totalPages={totalPages} />
         )}
       </main>
