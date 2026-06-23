@@ -1,12 +1,12 @@
 import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import type { AppProps } from "next/app";
-import { UserProvider } from "@auth0/nextjs-auth0";
+import { Auth0Provider } from "@auth0/nextjs-auth0";
 import { Slide, ToastContainer } from "react-toastify";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <UserProvider>
+    <Auth0Provider>
       <Component {...pageProps} />
       <ToastContainer
         position="bottom-center"
@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         transition={Slide}
         limit={1}
       />
-    </UserProvider>
+    </Auth0Provider>
   );
 }
 export default MyApp;
