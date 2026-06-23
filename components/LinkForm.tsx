@@ -31,6 +31,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     slug?: string;
     description?: string;
     expiresAt?: string;
+    maxUsage?: string;
     general?: string;
   }>({});
   const [formData, setFormData] = useState({
@@ -39,6 +40,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     slug: "",
     description: "",
     expiresAt: "",
+    maxUsage: "",
     createdAt: undefined,
     totalUsage: 0,
   });
@@ -64,6 +66,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
         setFormData({
           ...json,
           expiresAt: json.expiresAt ? json.expiresAt.slice(0, 16) : "",
+          maxUsage: json.maxUsage != null ? String(json.maxUsage) : "",
         });
       } finally {
         setIsLoading(false);
@@ -86,6 +89,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
       slug: "",
       description: "",
       expiresAt: "",
+      maxUsage: "",
       createdAt: undefined,
       totalUsage: 0,
     });
@@ -112,6 +116,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
           expiresAt: formData.expiresAt
             ? new Date(formData.expiresAt + "Z").toISOString()
             : null,
+          maxUsage: formData.maxUsage ? parseInt(formData.maxUsage) : null,
         }),
       });
 
@@ -272,6 +277,27 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                       />
                       {formErrors.expiresAt && (
                         <p className="mt-1 text-xs text-red-600">{formErrors.expiresAt}</p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="maxUsage"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        Max Usage <span className="text-gray-400 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="number"
+                        id="maxUsage"
+                        name="maxUsage"
+                        value={formData.maxUsage}
+                        onChange={handleChange}
+                        min={1}
+                        className={`mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600 ${formErrors.maxUsage ? "border-red-500" : "border-gray-300"}`}
+                      />
+                      {formErrors.maxUsage && (
+                        <p className="mt-1 text-xs text-red-600">{formErrors.maxUsage}</p>
                       )}
                     </div>
 

@@ -3,23 +3,34 @@ import Head from "next/head";
 import Link from "next/link";
 
 interface SlugPageProps {
-  expired: boolean;
   slug: string;
+  reason: "expired" | "usage_limit";
 }
 
-const SlugPage = ({ expired, slug }: SlugPageProps) => {
-  if (!expired) return null;
+const messages = {
+  expired: {
+    title: "Link Expired",
+    body: "has expired and is no longer available.",
+  },
+  usage_limit: {
+    title: "Link Unavailable",
+    body: "has reached its maximum number of uses.",
+  },
+};
+
+const SlugPage = ({ slug, reason }: SlugPageProps) => {
+  const { title, body } = messages[reason];
 
   return (
     <>
       <Head>
-        <title>Link Expired</title>
+        <title>{title}</title>
       </Head>
       <div className="flex flex-col items-center justify-center min-h-screen text-center px-4">
         <h1 className="text-6xl font-bold text-gray-300">410</h1>
-        <h2 className="mt-4 text-2xl font-semibold text-gray-700">Link Expired</h2>
+        <h2 className="mt-4 text-2xl font-semibold text-gray-700">{title}</h2>
         <p className="mt-2 text-gray-500">
-          The link <span className="font-medium text-gray-700">go/{slug}</span> has expired and is no longer available.
+          The link <span className="font-medium text-gray-700">go/{slug}</span> {body}
         </p>
         <Link
           href="/"
@@ -60,10 +71,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (res.status === 410) {
       context.res.statusCode = 410;
-      return { props: { expired: true, slug: slug[0] } };
+      const json = await res.json().catch(() => ({}));
+      const reason =
+        (json.detail as string)?.includes("usage limit") ? "usage_limit" : "expired";
+      return { props: { slug: slug[0], reason } };
     }
-  } catch {
-    // network error — fall through to 404
+
+    if (res.status === 404) {
+      return { notFound: true };
+    }
+
+    if (res.status >= 500) {
+      throw new Error(`Backend error: ${res.status}`);
+    }
+  } catch (err) {
+    if ((err as { digest?: string })?.digest !== undefined) throw err;
+    throw new Error("Failed to reach the redirect service.");
   }
 
   return { notFound: true };

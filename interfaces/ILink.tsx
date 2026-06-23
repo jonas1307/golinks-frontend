@@ -6,6 +6,7 @@ export interface ILink {
   slug: string;
   description: string;
   expiresAt?: string | null;
+  maxUsage?: number | null;
   createdAt: string;
   totalUsage: number;
   metrics: IMetric[];
