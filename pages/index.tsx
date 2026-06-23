@@ -10,7 +10,7 @@ import { LinkFilters } from "../components/LinkFilters";
 import { FiPlus } from "react-icons/fi";
 import { FloatingButton } from "../components/FloatingButton";
 import { LinkForm } from "../components/LinkForm";
-import { getAccessToken } from "@auth0/nextjs-auth0";
+import { auth0 } from "../lib/auth0";
 import { hasPermission } from "../utils/hasPermission";
 import { LinkPagination } from "../components/LinkPagination";
 
@@ -122,13 +122,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context
 ) => {
   try {
-    const { accessToken } = await getAccessToken(context.req, context.res, {
-      scopes: ["golinks:user"],
-    });
+    const { token } = await auth0.getAccessToken(context.req, context.res);
 
     return {
       props: {
-        isAdmin: hasPermission(accessToken || "", "golinks:admin"),
+        isAdmin: hasPermission(token || "", "golinks:admin"),
       },
     };
   } catch {

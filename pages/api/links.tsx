@@ -1,5 +1,5 @@
-import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
-import type { NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { auth0 } from "../../lib/auth0";
 
 async function proxyJson(upstream: Response, res: NextApiResponse) {
   const text = await upstream.text();
@@ -11,13 +11,11 @@ async function proxyJson(upstream: Response, res: NextApiResponse) {
   }
 }
 
-export default withApiAuthRequired(async (req, res) => {
+export default auth0.withApiAuthRequired(async (req: NextApiRequest, res: NextApiResponse) => {
   let response;
   let url: URL;
 
-  const { accessToken } = await getAccessToken(req, res, {
-    scopes: ["golinks:user"],
-  });
+  const { token } = await auth0.getAccessToken(req, res);
 
   const { query } = req;
 
@@ -30,7 +28,7 @@ export default withApiAuthRequired(async (req, res) => {
 
       response = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -42,7 +40,7 @@ export default withApiAuthRequired(async (req, res) => {
       response = await fetch(url, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(req.body),

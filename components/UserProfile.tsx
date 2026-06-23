@@ -26,14 +26,14 @@ export const UserProfile: FunctionComponent = () => {
         />
       )}
       {/*eslint-disable-next-line @next/next/no-html-link-for-pages*/}
-      <a href="/api/auth/logout" className="p-1">
+      <a href="/auth/logout" className="p-1">
         <FiLogOut size="18" />
       </a>
     </div>
   ) : (
     // eslint-disable-next-line @next/next/no-html-link-for-pages
     <a
-      href="/api/auth/login"
+      href="/auth/login"
       className="flex items-center space-x-2 border border-gray-100 hover:border-gray-200 hover:shadow-sm rounded-md py-2 px-4"
     >
       <span>Login</span>
