@@ -85,7 +85,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
           <div className="flex items-center justify-center">Actions</div>
         )}
       </div>
-      <div className="space-y-8 md:space-x-0">
+      <div className="space-y-8 md:space-y-0">
         {links &&
           links.map((link) => (
             <Fragment key={link.id}>
