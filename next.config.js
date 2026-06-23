@@ -6,6 +6,9 @@ if (process.env.NODE_ENV === 'development') {
 
 module.exports = {
   reactStrictMode: true,
+  experimental: {
+    nodeMiddleware: true,
+  },
   images: {
     remotePatterns: [
       {
