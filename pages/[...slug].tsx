@@ -1,49 +1,37 @@
 import { GetServerSideProps } from "next";
 
-interface SlugPageProps {
-  slug: string;
-}
-
-const SlugPage = ({ slug }: SlugPageProps) => {
-  return (
-    <div>
-      <h1>Slug not found: {slug}</h1>
-    </div>
-  );
-};
+const SlugPage = () => null;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { slug } = context.params as { slug: string[] };
-  const contextAlias = context.query.slug as string[];
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/links/register-access/${slug[0]}`,
-      { method: "POST" }
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/${slug[0]}`,
+      { redirect: "manual" }
     );
 
-    if (res.ok) {
-      const link = await res.json();
+    if (res.status === 302 || res.status === 301) {
+      const location = res.headers.get("location");
 
-      context.res.writeHead(302, {
-        Location: createRedirectUrl({
-          linkUrl: link.url,
-          linkAlias: link.slug,
-          contextAlias,
-        }),
-      });
-
-      context.res.end();
+      if (location) {
+        return {
+          redirect: {
+            destination: createRedirectUrl({
+              linkUrl: location,
+              linkAlias: slug[0],
+              contextAlias: slug,
+            }),
+            permanent: false,
+          },
+        };
+      }
     }
   } catch {
-    // network or parse error — fall through to render not-found page
+    // network error — fall through to 404
   }
 
-  return {
-    props: {
-      slug: slug[0],
-    },
-  };
+  return { notFound: true };
 };
 
 interface CreateRedirectUrlProps {
