@@ -80,7 +80,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
 
   if (!links) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <SyncLoader
           margin={5}
           size={10}
