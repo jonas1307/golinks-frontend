@@ -85,7 +85,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
           <div className="flex items-center justify-center">Actions</div>
         )}
       </div>
-      <div className="space-y-8 md:space-x-0">
+      <div className="space-y-8 md:space-y-0">
         {links &&
           links.map((link) => (
             <Fragment key={link.id}>
@@ -99,17 +99,18 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                 </div>
 
                 <div
-                  className={`grid items-center whitespace-nowrap overflow-ellipsis overflow-hidden ${
+                  className={`flex items-center overflow-hidden ${
                     isAdmin ? "col-span-2" : "col-span-3"
                   }`}
                 >
-                  <span className="text-xs text-gray-800">{link.url}</span>
+                  <span className="text-xs text-gray-800 truncate">{link.url}</span>
                 </div>
 
-                <div className="grid items-center justify-center col-span-2 h-40">
+                <div className="col-span-2 h-40">
                   <ActivityChart
                     metrics={link.metrics}
                     metricRange={metricRange}
+                    height="100%"
                   />
                 </div>
 
@@ -147,8 +148,8 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                   )}
                 </div>
 
-                <div className="my-2 whitespace-nowrap overflow-ellipsis overflow-hidden">
-                  <span className="text-xs">{link.url}</span>
+                <div className="my-2 overflow-hidden">
+                  <span className="text-xs block truncate">{link.url}</span>
                 </div>
 
                 <div className="my-4">
