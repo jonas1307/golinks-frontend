@@ -30,6 +30,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     url?: string;
     slug?: string;
     description?: string;
+    expiresAt?: string;
     general?: string;
   }>({});
   const [formData, setFormData] = useState({
@@ -37,6 +38,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     url: "",
     slug: "",
     description: "",
+    expiresAt: "",
     createdAt: undefined,
     totalUsage: 0,
   });
@@ -59,7 +61,10 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
         setIsLoading(true);
         const response = await fetch(`/api/links/${id}`);
         const json = await response.json();
-        setFormData(json);
+        setFormData({
+          ...json,
+          expiresAt: json.expiresAt ? json.expiresAt.slice(0, 16) : "",
+        });
       } finally {
         setIsLoading(false);
       }
@@ -80,6 +85,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
       url: "",
       slug: "",
       description: "",
+      expiresAt: "",
       createdAt: undefined,
       totalUsage: 0,
     });
@@ -103,6 +109,9 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
           url: formData.url,
           slug: formData.slug,
           description: formData.description,
+          expiresAt: formData.expiresAt
+            ? new Date(formData.expiresAt + "Z").toISOString()
+            : null,
         }),
       });
 
@@ -111,7 +120,8 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
         if (json.errors) {
           const fieldErrors: Record<string, string> = {};
           for (const [key, messages] of Object.entries(json.errors)) {
-            fieldErrors[key.toLowerCase()] = (messages as string[])[0];
+            const camelKey = key.charAt(0).toLowerCase() + key.slice(1);
+            fieldErrors[camelKey] = (messages as string[])[0];
           }
           setFormErrors(fieldErrors);
         } else {
@@ -242,6 +252,26 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                       />
                       {formErrors.description && (
                         <p className="mt-1 text-xs text-red-600">{formErrors.description}</p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="expiresAt"
+                        className="text-sm font-medium text-gray-700"
+                      >
+                        Expires At <span className="text-gray-400 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="datetime-local"
+                        id="expiresAt"
+                        name="expiresAt"
+                        value={formData.expiresAt}
+                        onChange={handleChange}
+                        className={`mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600 ${formErrors.expiresAt ? "border-red-500" : "border-gray-300"}`}
+                      />
+                      {formErrors.expiresAt && (
+                        <p className="mt-1 text-xs text-red-600">{formErrors.expiresAt}</p>
                       )}
                     </div>
 

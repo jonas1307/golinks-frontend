@@ -5,6 +5,7 @@ export interface ILink {
   url: string;
   slug: string;
   description: string;
+  expiresAt?: string | null;
   createdAt: string;
   totalUsage: number;
   metrics: IMetric[];

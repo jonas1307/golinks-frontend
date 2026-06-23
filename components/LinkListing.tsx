@@ -5,6 +5,22 @@ import { IPagedResult } from "../interfaces/IPagedResult";
 import SyncLoader from "react-spinners/SyncLoader";
 import { FiEdit } from "react-icons/fi";
 
+const ExpiryBadge = ({ expiresAt }: { expiresAt?: string | null }) => {
+  if (!expiresAt) return null;
+  const expired = new Date(expiresAt) <= new Date();
+  return (
+    <span
+      className={`text-xs px-1.5 py-0.5 rounded font-medium ${
+        expired ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-500"
+      }`}
+    >
+      {expired
+        ? "Expired"
+        : `Expires at ${new Date(expiresAt).toLocaleDateString()}`}
+    </span>
+  );
+};
+
 export interface ILinkListingProps {
   metricRange: string;
   isAdmin: boolean;
@@ -90,12 +106,15 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
           links.map((link) => (
             <Fragment key={link.id}>
               <div
-                className="py-3 hidden md:grid grid-cols-7 gap-x-3 border border-t-0 border-slate-300"
+                className={`py-3 hidden md:grid grid-cols-7 gap-x-3 border border-t-0 border-slate-300 ${link.expiresAt && new Date(link.expiresAt) <= new Date() ? "opacity-50" : ""}`}
               >
-                <div className="grid justify-center items-center">
+                <div className="flex flex-col items-center justify-center gap-1">
                   <h2 className="text-lg font-bold">
                     <a href={`/${link.slug}`}>go/{link.slug}</a>
                   </h2>
+                  <div className="h-5 flex items-center">
+                    <ExpiryBadge expiresAt={link.expiresAt} />
+                  </div>
                 </div>
 
                 <div
@@ -103,7 +122,9 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                     isAdmin ? "col-span-2" : "col-span-3"
                   }`}
                 >
-                  <span className="text-xs text-gray-800 truncate">{link.url}</span>
+                  <span className="text-xs text-gray-800 truncate">
+                    {link.url}
+                  </span>
                 </div>
 
                 <div className="col-span-2 h-40">
@@ -131,12 +152,15 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
               </div>
 
               <div
-                className="block md:hidden px-4 py-2 m-auto w-5/6 border border-gray-200 rounded-md shadow-md"
+                className={`block md:hidden px-4 py-2 m-auto w-5/6 border border-gray-200 rounded-md shadow-md ${link.expiresAt && new Date(link.expiresAt) <= new Date() ? "opacity-50" : ""}`}
               >
                 <div className="flex items-center justify-between h-10">
-                  <h2 className="text-2xl font-bold">
-                    <a href={`/${link.slug}`}>go/{link.slug}</a>
-                  </h2>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-2xl font-bold">
+                      <a href={`/${link.slug}`}>go/{link.slug}</a>
+                    </h2>
+                    <ExpiryBadge expiresAt={link.expiresAt} />
+                  </div>
 
                   {isAdmin && (
                     <button
