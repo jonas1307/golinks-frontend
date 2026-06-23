@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, useEffect, useState } from "react";
+import React, { Fragment, FunctionComponent, useEffect, useState } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -26,6 +26,12 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
 }) => {
   const [formTitle, setFormTitle] = useState<string>("Create a New Link");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [formErrors, setFormErrors] = useState<{
+    url?: string;
+    slug?: string;
+    description?: string;
+    general?: string;
+  }>({});
   const [formData, setFormData] = useState({
     id: undefined,
     url: "",
@@ -41,6 +47,7 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
 
   useEffect(() => {
     resetForm();
+    setFormErrors({});
     setIsLoading(false);
   }, [isOpen]);
 
@@ -61,12 +68,10 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
     loadLink();
   }, [id]);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
+    setFormErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
   const resetForm = () => {
@@ -103,12 +108,15 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
 
       if (!response.ok) {
         const json = await response.json();
-        const message =
-          json.detail ??
-          (json.errors
-            ? (Object.values(json.errors) as string[][]).flat().join(" ")
-            : "An unexpected error occurred.");
-        toast.error(message);
+        if (json.errors) {
+          const fieldErrors: Record<string, string> = {};
+          for (const [key, messages] of Object.entries(json.errors)) {
+            fieldErrors[key.toLowerCase()] = (messages as string[])[0];
+          }
+          setFormErrors(fieldErrors);
+        } else {
+          setFormErrors({ general: json.detail ?? "An unexpected error occurred." });
+        }
       } else {
         toast.success(`Link ${isEditMode ? "edited" : "created"} successfully`);
         onSave();
@@ -156,6 +164,9 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                   >
                     {formTitle}
                   </DialogTitle>
+                  {formErrors.general && (
+                    <p className="mt-2 text-sm text-red-600">{formErrors.general}</p>
+                  )}
                   <form
                     onSubmit={handleSubmit}
                     className="max-w-lg mx-auto p-6 rounded-lg space-y-4"
@@ -181,10 +192,13 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                         name="url"
                         value={formData.url}
                         onChange={handleChange}
-                        className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600"
+                        className={`mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600 ${formErrors.url ? "border-red-500" : "border-gray-300"}`}
                         autoComplete="off"
                         required
                       />
+                      {formErrors.url && (
+                        <p className="mt-1 text-xs text-red-600">{formErrors.url}</p>
+                      )}
                     </div>
 
                     <div className="flex flex-col">
@@ -200,10 +214,13 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                         name="slug"
                         value={formData.slug}
                         onChange={handleChange}
-                        className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600"
+                        className={`mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600 ${formErrors.slug ? "border-red-500" : "border-gray-300"}`}
                         autoComplete="off"
                         required
                       />
+                      {formErrors.slug && (
+                        <p className="mt-1 text-xs text-red-600">{formErrors.slug}</p>
+                      )}
                     </div>
 
                     <div className="flex flex-col">
@@ -219,10 +236,13 @@ export const LinkForm: FunctionComponent<ILinkFormProps> = ({
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
-                        className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600"
+                        className={`mt-1 p-2 border rounded-md shadow-sm focus:outline-none focus:ring-teal-600 focus:border-teal-600 ${formErrors.description ? "border-red-500" : "border-gray-300"}`}
                         autoComplete="off"
                         required
                       />
+                      {formErrors.description && (
+                        <p className="mt-1 text-xs text-red-600">{formErrors.description}</p>
+                      )}
                     </div>
 
                     <button
