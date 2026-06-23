@@ -7,9 +7,8 @@ import { useRouter } from "next/router";
 import { UserProfile } from "../components/UserProfile";
 import { LinkListing } from "../components/LinkListing";
 import { LinkFilters } from "../components/LinkFilters";
-import { FiPlus } from "react-icons/fi";
-import { FloatingButton } from "../components/FloatingButton";
 import { LinkForm } from "../components/LinkForm";
+import { FiPlus } from "react-icons/fi";
 import { auth0 } from "../lib/auth0";
 import { hasPermission } from "../utils/hasPermission";
 import { LinkPagination } from "../components/LinkPagination";
@@ -74,9 +73,20 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
       </Head>
 
       <header className="h-16 flex justify-between items-center border-b border-gray-100">
-        <h1 className="font-bold text-4xl">
-          <Link href="/">go/links</Link>
-        </h1>
+        <div className="flex items-center gap-4">
+          <h1 className="font-bold text-4xl">
+            <Link href="/">go/links</Link>
+          </h1>
+          {isAdmin && (
+            <button
+              onClick={openNewLink}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            >
+              <FiPlus size={16} />
+              <span className="hidden sm:inline">New link</span>
+            </button>
+          )}
+        </div>
 
         <div className="flex justify-end">
           <UserProfile />
@@ -113,10 +123,6 @@ const Home: NextPage<PageProps> = ({ isAdmin }) => {
           &copy; 2021-{getYear(Date.now())} Jonas Amorim.
         </span>
       </footer>
-
-      {isAdmin && (
-        <FloatingButton Icon={FiPlus} action={openNewLink} />
-      )}
 
       {isAdmin && (
         <LinkForm
