@@ -8,7 +8,7 @@ go/links allows teams to register memorable short aliases for long or frequently
 
 ## Tech Stack
 
-- **Framework:** [Next.js 14](https://nextjs.org/) with TypeScript
+- **Framework:** [Next.js 15](https://nextjs.org/) with TypeScript
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Auth:** [Auth0](https://auth0.com/) via `@auth0/nextjs-auth0`
 - **Charts:** [Recharts](https://recharts.org/)
@@ -41,10 +41,12 @@ cp .env.example .env.local
 | Variable | Description |
 |---|---|
 | `AUTH0_SECRET` | Long random string used to encrypt the session cookie |
-| `AUTH0_BASE_URL` | Public URL of this Next.js app (e.g. `http://localhost:3000`) |
+| `APP_BASE_URL` | Public URL of this Next.js app (e.g. `http://localhost:3000`) |
 | `AUTH0_ISSUER_BASE_URL` | Auth0 domain (e.g. `https://your-tenant.auth0.com`) |
 | `AUTH0_CLIENT_ID` | Auth0 application client ID |
 | `AUTH0_CLIENT_SECRET` | Auth0 application client secret |
+| `AUTH0_AUDIENCE` | Auth0 API audience identifier |
+| `AUTH0_SCOPE` | Space-separated OAuth scopes (e.g. `openid profile email`) |
 | `NEXT_PUBLIC_API_BASE_URL` | Base URL of the golinks backend (e.g. `https://localhost:5001`) |
 
 ### Running
@@ -59,17 +61,17 @@ The app will be available at `http://localhost:3000`.
 
 The frontend acts as a **BFF (Backend for Frontend)**. Browser-side components never talk to the backend directly for authenticated operations — all mutations go through Next.js API routes (`/api/links`, `/api/links/[id]`) that inject the Auth0 Bearer token server-side.
 
-The one exception is the public metrics endpoint (`GET /links/metrics`), which is unauthenticated and fetched directly from the browser.
+The one exception is the public metrics endpoint (`GET /metrics`), which is unauthenticated and fetched directly from the browser.
 
 ```
 Browser
-  ├── GET /links/metrics             → Backend (public, no auth)
+  ├── GET /metrics                   → Backend (public, no auth)
   ├── POST /api/links                → Next.js proxy → Backend (with Bearer token)
   ├── PUT /api/links/[id]            → Next.js proxy → Backend (with Bearer token)
   └── DELETE /api/links/[id]        → Next.js proxy → Backend (with Bearer token)
 
 Server-side (getServerSideProps)
-  └── POST /links/register-access/[slug]  → Backend (anonymous)
+  └── GET /[slug]                    → Backend (anonymous, tracks access + redirects)
 ```
 
 ## Link Registration

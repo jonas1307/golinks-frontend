@@ -30,7 +30,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/links/metrics?metricRange=${metricRange}&pageNumber=${page}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/metrics?metricRange=${metricRange}&pageNumber=${page}`
         );
         if (!res.ok) throw new Error("Failed to fetch links");
         const data: IPagedResult<ILink> = await res.json();
