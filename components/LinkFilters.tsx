@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { SelectComponent } from "./SelectComponent";
 import { FiSearch } from "react-icons/fi";
 
@@ -16,11 +16,13 @@ export const LinkFilters: FunctionComponent<ILinkFiltersProps> = ({
   setSearch,
 }) => {
   const [inputValue, setInputValue] = useState(search);
+  const setSearchRef = useRef(setSearch);
+  useEffect(() => { setSearchRef.current = setSearch; });
 
   useEffect(() => {
-    const timer = setTimeout(() => setSearch(inputValue), 400);
+    const timer = setTimeout(() => setSearchRef.current(inputValue), 400);
     return () => clearTimeout(timer);
-  }, [inputValue, setSearch]);
+  }, [inputValue]);
 
   const selectOptions = [
     { value: "30", label: "30 days" },
