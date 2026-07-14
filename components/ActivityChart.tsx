@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -15,7 +15,9 @@ export interface IActivityChart {
   metrics?: IMetric[];
   metricRange: string;
   baseValue?: number;
+  mobileBaseValue?: number | null;
   aspect?: number;
+  mobileAspect?: number;
   height?: number | `${number}%`;
 }
 
@@ -23,9 +25,25 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
   metrics,
   metricRange,
   baseValue,
+  mobileBaseValue,
   aspect,
+  mobileAspect,
   height,
 }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const resolvedAspect = isMobile && mobileAspect !== undefined ? mobileAspect : aspect;
+  const resolvedBaseValue = isMobile && mobileBaseValue !== undefined
+    ? (mobileBaseValue ?? undefined)
+    : baseValue;
   const now = new Date();
 
   const nowUtc = toZonedTime(now, "UTC");
@@ -57,12 +75,12 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
     lowerValue = -upperValue;
   }
 
-  if (baseValue !== undefined) {
-    lowerValue = baseValue;
+  if (resolvedBaseValue !== undefined) {
+    lowerValue = resolvedBaseValue;
   }
 
   return (
-    <ResponsiveContainer width="100%" height={height} aspect={height ? undefined : (aspect ?? 1)}>
+    <ResponsiveContainer width="100%" height={height} aspect={height ? undefined : (resolvedAspect ?? 1)}>
       <AreaChart data={data} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
         <defs>
           <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">

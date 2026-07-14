@@ -199,7 +199,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
               </div>
 
               <div
-                className={`block md:hidden px-4 py-2 m-auto w-5/6 border border-gray-200 rounded-md shadow-md ${isDateExpired(link) || isLimitReached(link) ? "opacity-50" : ""}`}
+                className={`block md:hidden px-4 py-2 m-auto w-5/6 border border-gray-200 rounded-md shadow-md mt-4 ${isDateExpired(link) || isLimitReached(link) ? "opacity-50" : ""}`}
               >
                 <div className="flex items-center justify-between h-10">
                   <div className="flex items-center gap-2">
@@ -241,12 +241,14 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
                   </p>
                 </div>
 
-                <div className="border-t mt-2 pt-2 w-50 md:border-t-0 md:mt-0 md:pt-0 md:border-l md:pl-2 md:ml-2 border-gray-200">
+                <div className="border-t mt-2 pt-2 w-full md:border-t-0 md:mt-0 md:pt-0 md:border-l md:pl-2 md:ml-2 md:w-auto border-gray-200">
                   <ActivityChart
                     metrics={link.metrics}
                     metricRange={metricRange}
                     baseValue={0}
                     aspect={1.75}
+                    mobileAspect={3}
+                    mobileBaseValue={null}
                   />
                 </div>
               </div>
