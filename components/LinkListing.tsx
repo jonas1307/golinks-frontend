@@ -199,7 +199,7 @@ export const LinkListing: FunctionComponent<ILinkListingProps> = ({
               </div>
 
               <div
-                className={`block md:hidden px-4 py-2 m-auto w-5/6 border border-gray-200 rounded-md shadow-md ${isDateExpired(link) || isLimitReached(link) ? "opacity-50" : ""}`}
+                className={`block md:hidden px-4 py-2 m-auto w-5/6 border border-gray-200 rounded-md shadow-md mt-4 ${isDateExpired(link) || isLimitReached(link) ? "opacity-50" : ""}`}
               >
                 <div className="flex items-center justify-between h-10">
                   <div className="flex items-center gap-2">
