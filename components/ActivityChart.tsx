@@ -3,7 +3,6 @@ import {
   Area,
   AreaChart,
   ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
@@ -90,7 +89,6 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
         </defs>
         <XAxis dataKey="date" hide={true} />
         <YAxis hide={true} domain={[lowerValue, upperValue]} />
-        <Tooltip />
         <Area
           type="monotone"
           dataKey="count"
@@ -98,6 +96,8 @@ export const ActivityChart: FunctionComponent<IActivityChart> = ({
           stroke="#0d9488"
           fillOpacity={1}
           fill="url(#gradient)"
+          activeDot={false}
+          dot={false}
         />
       </AreaChart>
     </ResponsiveContainer>
