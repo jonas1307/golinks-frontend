@@ -17,9 +17,12 @@ export const LinkFilters: FunctionComponent<ILinkFiltersProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState(search);
   const setSearchRef = useRef(setSearch);
+  const prevInputValue = useRef(inputValue);
   useEffect(() => { setSearchRef.current = setSearch; });
 
   useEffect(() => {
+    if (inputValue === prevInputValue.current) return;
+    prevInputValue.current = inputValue;
     const timer = setTimeout(() => setSearchRef.current(inputValue), 400);
     return () => clearTimeout(timer);
   }, [inputValue]);
