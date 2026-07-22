@@ -40,7 +40,8 @@ const Home: NextPage<PageProps> = ({ isAdmin, user }) => {
   const handleSearchChange = useCallback((value: string) => {
     setSearch(value);
     if (router.query.page) {
-      router.replace({ query: { ...router.query, page: undefined } }, undefined, { shallow: true });
+      const { page: _, ...rest } = router.query;
+      router.replace({ query: rest }, undefined, { shallow: true });
     }
   }, [router]);
 
