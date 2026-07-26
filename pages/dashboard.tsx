@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { auth0 } from "../lib/auth0";
 import { hasPermission } from "../utils/hasPermission";
-import { UserProfile } from "../components/UserProfile";
+import { AppHeader } from "../components/AppHeader";
 import { HeatmapChart } from "../components/HeatmapChart";
 import { BreakdownBar } from "../components/BreakdownBar";
 import { PieBreakdown } from "../components/PieBreakdown";
@@ -86,17 +85,7 @@ const Dashboard: NextPage<PageProps> = ({ user }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="h-16 flex justify-between items-center border-b border-gray-100">
-        <div className="flex items-center gap-4">
-          <h1 className="font-bold text-4xl">
-            <Link href="/">go/links</Link>
-          </h1>
-          <span className="text-gray-400 text-sm font-medium">dashboard</span>
-        </div>
-        <div className="flex justify-end">
-          <UserProfile user={user} />
-        </div>
-      </header>
+      <AppHeader user={user} isAdmin={true} />
 
       <main className="w-full py-6 space-y-6">
         {/* Filters */}

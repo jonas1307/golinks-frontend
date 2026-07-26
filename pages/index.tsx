@@ -2,13 +2,11 @@ import React, { useCallback, useState } from "react";
 import { getYear } from "date-fns";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { UserProfile } from "../components/UserProfile";
+import { AppHeader } from "../components/AppHeader";
 import { LinkListing } from "../components/LinkListing";
 import { LinkFilters } from "../components/LinkFilters";
 import { LinkForm } from "../components/LinkForm";
-import { FiPlus } from "react-icons/fi";
 import { auth0 } from "../lib/auth0";
 import { hasPermission } from "../utils/hasPermission";
 import { LinkPagination } from "../components/LinkPagination";
@@ -74,26 +72,7 @@ const Home: NextPage<PageProps> = ({ isAdmin, user }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="h-16 flex justify-between items-center border-b border-gray-100">
-        <div className="flex items-center gap-4">
-          <h1 className="font-bold text-4xl">
-            <Link href="/">go/links</Link>
-          </h1>
-          {isAdmin && (
-            <button
-              onClick={openNewLink}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            >
-              <FiPlus size={16} />
-              <span className="hidden sm:inline">New link</span>
-            </button>
-          )}
-        </div>
-
-        <div className="flex justify-end">
-          <UserProfile user={user} />
-        </div>
-      </header>
+      <AppHeader user={user} isAdmin={isAdmin} onNewLink={openNewLink} />
 
       <main className="w-full py-4 space-y-2">
         {(totalPages !== null && totalPages > 0) || search ? (
