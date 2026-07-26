@@ -20,10 +20,12 @@ export const AppHeader: FunctionComponent<IAppHeaderProps> = ({ user, isAdmin, o
           <Link href="/">go/links</Link>
         </h1>
 
-        {isAdmin && (
+        {user && (
           <nav className="flex items-center gap-1">
             <NavLink href="/dashboard" active={pathname === "/dashboard"}>Dashboard</NavLink>
-            <NavLink href="/admin" active={pathname === "/admin"}>Admin</NavLink>
+            {isAdmin && (
+              <NavLink href="/admin" active={pathname === "/admin"}>Admin</NavLink>
+            )}
           </nav>
         )}
       </div>
