@@ -40,7 +40,7 @@ const Admin: NextPage<PageProps> = ({ user }) => {
       <AppHeader user={user} isAdmin={true} />
 
       <main className="w-full py-6 space-y-6">
-        <section className="border border-gray-100 rounded-lg p-4 shadow-sm space-y-3 max-w-lg">
+        <section className="border border-gray-100 rounded-lg p-4 shadow-sm space-y-3">
           <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
             User Agent backfill
           </h2>
