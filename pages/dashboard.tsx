@@ -16,6 +16,7 @@ import { getYear } from "date-fns";
 
 interface PageProps {
   user?: { picture?: string; name?: string } | null;
+  isAdmin?: boolean;
 }
 
 const PERIOD_OPTIONS = [
@@ -25,15 +26,13 @@ const PERIOD_OPTIONS = [
   { value: "90", label: "90 days" },
 ];
 
-const Dashboard: NextPage<PageProps> = ({ user }) => {
+const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
   const [days, setDays] = useState("30");
   const [linkId, setLinkId] = useState("");
   const [excludeBots, setExcludeBots] = useState(false);
   const [links, setLinks] = useState<ILink[]>([]);
   const [data, setData] = useState<IDashboard | null>(null);
   const [loading, setLoading] = useState(true);
-  const [backfilling, setBackfilling] = useState(false);
-  const [backfillResult, setBackfillResult] = useState<{ updated: number; skipped: number } | null>(null);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/metrics?metricRange=30&pageSize=200`)
@@ -59,21 +58,6 @@ const Dashboard: NextPage<PageProps> = ({ user }) => {
     fetchDashboard();
   }, [fetchDashboard]);
 
-  const handleBackfill = async () => {
-    setBackfilling(true);
-    setBackfillResult(null);
-    try {
-      const res = await fetch("/api/dashboard/backfill-ua", { method: "POST" });
-      const json = await res.json();
-      setBackfillResult(json);
-      fetchDashboard();
-    } catch {
-      // silent
-    } finally {
-      setBackfilling(false);
-    }
-  };
-
   return (
     <div className="container mx-auto px-2 xl:px-0">
       <Head>
@@ -81,7 +65,7 @@ const Dashboard: NextPage<PageProps> = ({ user }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <AppHeader user={user} isAdmin={true} />
+      <AppHeader user={user} isAdmin={isAdmin} />
 
       <main className="w-full py-6 space-y-6">
         {/* Filters */}
@@ -103,20 +87,6 @@ const Dashboard: NextPage<PageProps> = ({ user }) => {
             />
             Exclude bots
           </label>
-          <div className="flex items-center gap-3 ml-auto">
-            <button
-              onClick={handleBackfill}
-              disabled={backfilling}
-              className="text-xs px-3 py-1.5 border border-gray-200 rounded-md text-gray-500 hover:border-gray-300 hover:text-gray-700 disabled:opacity-50"
-            >
-              {backfilling ? "Running backfill…" : "Backfill UA data"}
-            </button>
-            {backfillResult && (
-              <span className="text-xs text-gray-400">
-                {backfillResult.updated} updated, {backfillResult.skipped} skipped
-              </span>
-            )}
-          </div>
         </div>
 
         {loading ? (
@@ -192,13 +162,14 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
     const { token } = await auth0.getAccessToken(context.req, context.res);
     const session = await auth0.getSession(context.req);
 
-    if (!hasPermission(token || "", "golinks:admin")) {
-      return { redirect: { destination: "/", permanent: false } };
-    }
-
-    return { props: { user: session?.user ?? null } };
+    return {
+      props: {
+        user: session?.user ?? null,
+        isAdmin: hasPermission(token || "", "golinks:admin"),
+      },
+    };
   } catch {
-    return { redirect: { destination: "/auth/login", permanent: false } };
+    return { redirect: { destination: "/auth/login?returnTo=/dashboard", permanent: false } };
   }
 };
 
