@@ -11,6 +11,7 @@ import { ClicksOverTimeChart } from "../components/ClicksOverTimeChart";
 import { IDashboard } from "../interfaces/IDashboard";
 import { ILink } from "../interfaces/ILink";
 import { SelectComponent } from "../components/SelectComponent";
+import { LinkCombobox } from "../components/LinkCombobox";
 import { getYear } from "date-fns";
 
 interface PageProps {
@@ -73,11 +74,6 @@ const Dashboard: NextPage<PageProps> = ({ user }) => {
     }
   };
 
-  const linkOptions = [
-    { value: "", label: "All links" },
-    ...links.map((l) => ({ value: l.id, label: `go/${l.slug}` })),
-  ];
-
   return (
     <div className="container mx-auto px-2 xl:px-0">
       <Head>
@@ -97,13 +93,7 @@ const Dashboard: NextPage<PageProps> = ({ user }) => {
             selectedValue={days}
             onChange={setDays}
           />
-          <SelectComponent
-            id="link"
-            label="Link"
-            options={linkOptions}
-            selectedValue={linkId}
-            onChange={setLinkId}
-          />
+          <LinkCombobox links={links} value={linkId} onChange={setLinkId} />
           <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
             <input
               type="checkbox"
