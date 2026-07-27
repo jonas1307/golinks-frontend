@@ -4,7 +4,7 @@ A web application for managing and using internal short links, inspired by Googl
 
 ## Overview
 
-go/links allows teams to register memorable short aliases for long or frequently-used URLs. Links are accessed by navigating to `/<slug>` on the app's domain. Admins can create and manage links through a protected form; all users can browse the link directory with click metrics.
+go/links allows teams to register memorable short aliases for long or frequently-used URLs. Links are accessed by navigating to `/<slug>` on the app's domain. Admins can create and manage links through a protected form; authenticated users can browse the link directory and view the analytics dashboard with click metrics, device breakdowns, and usage heatmaps.
 
 ## Tech Stack
 
@@ -59,19 +59,21 @@ The app will be available at `http://localhost:3000`.
 
 ## Architecture
 
-The frontend acts as a **BFF (Backend for Frontend)**. Browser-side components never talk to the backend directly for authenticated operations — all mutations go through Next.js API routes (`/api/links`, `/api/links/[id]`) that inject the Auth0 Bearer token server-side.
+The frontend acts as a **BFF (Backend for Frontend)**. Browser-side components never talk to the backend directly for authenticated operations — all mutations and authenticated queries go through Next.js API routes that inject the Auth0 Bearer token server-side.
 
 The one exception is the public metrics endpoint (`GET /metrics`), which is unauthenticated and fetched directly from the browser.
 
 ```
 Browser
-  ├── GET /metrics                   → Backend (public, no auth)
-  ├── POST /api/links                → Next.js proxy → Backend (with Bearer token)
-  ├── PUT /api/links/[id]            → Next.js proxy → Backend (with Bearer token)
-  └── DELETE /api/links/[id]        → Next.js proxy → Backend (with Bearer token)
+  ├── GET /metrics                        → Backend (public, no auth)
+  ├── POST /api/links                     → Next.js proxy → Backend (with Bearer token)
+  ├── PUT /api/links/[id]                 → Next.js proxy → Backend (with Bearer token)
+  ├── DELETE /api/links/[id]             → Next.js proxy → Backend (with Bearer token)
+  ├── GET /api/dashboard                  → Next.js proxy → Backend (with Bearer token)
+  └── POST /api/dashboard/backfill-ua    → Next.js proxy → Backend (with Bearer token)
 
 Server-side (getServerSideProps)
-  └── GET /[slug]                    → Backend (anonymous, tracks access + redirects)
+  └── GET /[slug]                         → Backend (anonymous, tracks access + redirects)
 ```
 
 ## Link Registration
@@ -134,8 +136,9 @@ go/pr/api/137        →  https://github.com/my-org/api/pull/137
 
 | Action | Scope required |
 |---|---|
-| Browse links and metrics | `golinks:user` |
+| Browse links and analytics dashboard | Authenticated (any valid token) |
 | Create, edit, or delete links | `golinks:admin` |
+| Access admin tools (e.g. UA backfill) | `golinks:admin` |
 
 Permissions are validated on both the frontend (UI visibility) and the backend (API enforcement).
 
