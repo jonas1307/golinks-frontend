@@ -17,6 +17,10 @@ export interface IDailyCount {
 export interface IDashboard {
   totalClicks: number;
   botClicks: number;
+  uniqueVisitors: number;
+  newVisitors: number;
+  returningVisitors: number;
+  avgClicksPerVisitor: number;
   byDevice: ILabelCount[];
   byDeviceModel: ILabelCount[];
   byBrowser: ILabelCount[];
