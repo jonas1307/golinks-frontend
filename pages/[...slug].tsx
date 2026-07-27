@@ -47,9 +47,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { slug } = context.params as { slug: string[] };
 
   try {
+    const userAgent = context.req.headers["user-agent"];
+    const referrer = context.req.headers["referer"];
+
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/${slug[0]}`,
-      { redirect: "manual" }
+      {
+        redirect: "manual",
+        headers: {
+          ...(userAgent && { "User-Agent": userAgent }),
+          ...(referrer && { "Referer": referrer }),
+        },
+      }
     );
 
     if (res.status === 302 || res.status === 301) {
