@@ -95,11 +95,19 @@ const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
           <p className="text-sm text-red-400">Failed to load dashboard data.</p>
         ) : (
           <>
-            {/* Stats */}
+            {/* Click stats */}
             <div className="grid grid-cols-3 gap-4">
               <StatCard label="Total clicks" value={data.totalClicks} />
               <StatCard label="Human clicks" value={data.totalClicks - data.botClicks} />
               <StatCard label="Bot clicks" value={data.botClicks} />
+            </div>
+
+            {/* Visitor stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatCard label="Unique visitors" value={data.uniqueVisitors} />
+              <StatCard label="New visitors" value={data.newVisitors} />
+              <StatCard label="Returning visitors" value={data.returningVisitors} />
+              <StatCard label="Avg clicks / visitor" value={data.avgClicksPerVisitor.toFixed(1)} />
             </div>
 
             {/* Clicks over time */}
@@ -143,10 +151,12 @@ const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
   );
 };
 
-const StatCard = ({ label, value }: { label: string; value: number }) => (
+const StatCard = ({ label, value }: { label: string; value: number | string }) => (
   <div className="border border-gray-100 rounded-lg p-4 shadow-sm">
     <p className="text-xs text-gray-400 uppercase tracking-wide">{label}</p>
-    <p className="text-2xl font-bold text-gray-800 mt-1">{value.toLocaleString()}</p>
+    <p className="text-2xl font-bold text-gray-800 mt-1">
+      {typeof value === "number" ? value.toLocaleString() : value}
+    </p>
   </div>
 );
 
