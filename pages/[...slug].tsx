@@ -49,6 +49,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const userAgent = context.req.headers["user-agent"];
     const referrer = context.req.headers["referer"];
+    const forwarded = context.req.headers["x-forwarded-for"];
+    const clientIp = (Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(",")[0].trim())
+      ?? context.req.socket.remoteAddress;
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/${slug[0]}`,
@@ -57,6 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         headers: {
           ...(userAgent && { "User-Agent": userAgent }),
           ...(referrer && { "Referer": referrer }),
+          ...(clientIp && { "X-Forwarded-For": clientIp }),
         },
       }
     );
