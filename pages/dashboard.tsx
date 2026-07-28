@@ -69,7 +69,7 @@ const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
 
       <main className="w-full py-6 space-y-6">
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="hidden sm:flex flex-wrap items-center gap-4">
           <SelectComponent
             id="period"
             label="Period"
@@ -77,8 +77,10 @@ const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
             selectedValue={days}
             onChange={setDays}
           />
-          <LinkCombobox links={links} value={linkId} onChange={setLinkId} />
-          <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+          <div className="hidden xl:block">
+            <LinkCombobox links={links} value={linkId} onChange={setLinkId} />
+          </div>
+          <label className="hidden xl:flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={excludeBots}
