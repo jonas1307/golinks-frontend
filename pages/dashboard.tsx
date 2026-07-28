@@ -95,11 +95,11 @@ const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
           <p className="text-sm text-red-400">Failed to load dashboard data.</p>
         ) : (
           <>
-            {/* Click stats */}
+            {/* Visit stats */}
             <div className="grid grid-cols-3 gap-4">
-              <StatCard label="Total clicks" value={data.totalClicks} />
-              <StatCard label="Human clicks" value={data.totalClicks - data.botClicks} />
-              <StatCard label="Bot clicks" value={data.botClicks} />
+              <StatCard label="Total visits" value={data.totalClicks} />
+              <StatCard label="Human visits" value={data.totalClicks - data.botClicks} />
+              <StatCard label="Bot visits" value={data.botClicks} />
             </div>
 
             {/* Visitor stats */}
@@ -107,11 +107,11 @@ const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
               <StatCard label="Unique visitors" value={data.uniqueVisitors} />
               <StatCard label="New visitors" value={data.newVisitors} />
               <StatCard label="Returning visitors" value={data.returningVisitors} />
-              <StatCard label="Avg clicks / visitor" value={data.avgClicksPerVisitor.toFixed(1)} />
+              <StatCard label="Avg visits / visitor" value={data.avgClicksPerVisitor.toFixed(1)} />
             </div>
 
-            {/* Clicks over time */}
-            <Section title="Clicks over time">
+            {/* Visits over time */}
+            <Section title="Visits over time">
               <ClicksOverTimeChart data={data.clicksOverTime ?? []} />
             </Section>
 
@@ -135,7 +135,7 @@ const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
             </div>
 
             {/* Heatmap */}
-            <Section title="Hour × day of week">
+            <Section title="Traffic pattern">
               <HeatmapChart data={data.heatmap} />
             </Section>
           </>
