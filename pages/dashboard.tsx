@@ -35,7 +35,7 @@ const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/metrics?metricRange=30&pageSize=200`)
+    fetch(`/api/links?pageSize=50`)
       .then((r) => r.json())
       .then((p) => setLinks(p.items ?? []))
       .catch(() => {});
