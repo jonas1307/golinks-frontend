@@ -23,6 +23,7 @@ export const AppHeader: FunctionComponent<IAppHeaderProps> = ({ user, isAdmin, o
         {user && (
           <nav className="flex items-center gap-1">
             <NavLink href="/dashboard" active={pathname === "/dashboard"}>Dashboard</NavLink>
+            <NavLink href="/logs" active={pathname === "/logs"}>Logs</NavLink>
             {isAdmin && (
               <NavLink href="/admin" active={pathname === "/admin"}>Admin</NavLink>
             )}
