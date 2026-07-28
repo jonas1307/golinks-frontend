@@ -14,6 +14,12 @@ export interface IDailyCount {
   count: number;
 }
 
+export interface ITopLink {
+  slug: string;
+  url: string;
+  count: number;
+}
+
 export interface IDashboard {
   totalClicks: number;
   botClicks: number;
@@ -27,4 +33,6 @@ export interface IDashboard {
   byOs: ILabelCount[];
   clicksOverTime: IDailyCount[];
   heatmap: IHeatmapEntry[];
+  topLinks: ITopLink[];
+  byReferrer: ILabelCount[];
 }

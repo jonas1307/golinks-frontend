@@ -8,7 +8,7 @@ import { HeatmapChart } from "../components/HeatmapChart";
 import { BreakdownBar } from "../components/BreakdownBar";
 import { PieBreakdown } from "../components/PieBreakdown";
 import { ClicksOverTimeChart } from "../components/ClicksOverTimeChart";
-import { IDashboard } from "../interfaces/IDashboard";
+import { IDashboard, ITopLink } from "../interfaces/IDashboard";
 import { ILink } from "../interfaces/ILink";
 import { SelectComponent } from "../components/SelectComponent";
 import { LinkCombobox } from "../components/LinkCombobox";
@@ -136,6 +136,20 @@ const Dashboard: NextPage<PageProps> = ({ user, isAdmin }) => {
               </Section>
             </div>
 
+            {/* Top links + Referrers */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(data.topLinks?.length ?? 0) > 0 && (
+                <Section title="Top links">
+                  <TopLinksTable items={data.topLinks} />
+                </Section>
+              )}
+              {(data.byReferrer?.length ?? 0) > 0 && (
+                <Section title="Top referrers">
+                  <BreakdownBar data={data.byReferrer} />
+                </Section>
+              )}
+            </div>
+
             {/* Heatmap */}
             <Section title="Traffic pattern">
               <HeatmapChart data={data.heatmap} />
@@ -160,6 +174,21 @@ const StatCard = ({ label, value }: { label: string; value: number | string }) =
       {typeof value === "number" ? value.toLocaleString() : value}
     </p>
   </div>
+);
+
+const TopLinksTable = ({ items }: { items: ITopLink[] }) => (
+  <table className="min-w-full text-sm">
+    <tbody className="divide-y divide-gray-100">
+      {items.map((item, i) => (
+        <tr key={i} className="hover:bg-gray-50">
+          <td className="py-2 pr-3 text-gray-400 tabular-nums w-6">{i + 1}</td>
+          <td className="py-2 pr-3 font-medium text-gray-800 whitespace-nowrap">go/{item.slug}</td>
+          <td className="py-2 pr-3 text-gray-400 text-xs truncate max-w-[180px]" title={item.url}>{item.url}</td>
+          <td className="py-2 text-right font-semibold text-gray-700 tabular-nums whitespace-nowrap">{item.count.toLocaleString()}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 );
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
