@@ -4,7 +4,7 @@ A web application for managing and using internal short links, inspired by Googl
 
 ## Overview
 
-go/links allows teams to register memorable short aliases for long or frequently-used URLs. Links are accessed by navigating to `/<slug>` on the app's domain. Admins can create and manage links through a protected form; authenticated users can browse the link directory and view the analytics dashboard with click metrics, device breakdowns, and usage heatmaps.
+go/links allows teams to register memorable short aliases for long or frequently-used URLs. Links are accessed by navigating to `/<slug>` on the app's domain. Admins can create and manage links through a protected form; authenticated users can browse the link directory, view the analytics dashboard with visit metrics, device breakdowns, and traffic patterns, and inspect access logs with filters.
 
 ## Tech Stack
 
@@ -66,11 +66,13 @@ The one exception is the public metrics endpoint (`GET /metrics`), which is unau
 ```
 Browser
   ├── GET /metrics                        → Backend (public, no auth)
+  ├── GET /api/links                      → Next.js proxy → Backend (with Bearer token)
   ├── POST /api/links                     → Next.js proxy → Backend (with Bearer token)
   ├── PUT /api/links/[id]                 → Next.js proxy → Backend (with Bearer token)
   ├── DELETE /api/links/[id]             → Next.js proxy → Backend (with Bearer token)
   ├── GET /api/dashboard                  → Next.js proxy → Backend (with Bearer token)
-  └── POST /api/dashboard/backfill-ua    → Next.js proxy → Backend (with Bearer token)
+  ├── POST /api/dashboard/backfill-ua    → Next.js proxy → Backend (with Bearer token)
+  └── GET /api/logs                       → Next.js proxy → Backend (with Bearer token)
 
 Server-side (getServerSideProps)
   └── GET /[slug]                         → Backend (anonymous, tracks access + redirects)
@@ -136,7 +138,7 @@ go/pr/api/137        →  https://github.com/my-org/api/pull/137
 
 | Action | Scope required |
 |---|---|
-| Browse links and analytics dashboard | Authenticated (any valid token) |
+| Browse links, analytics dashboard, and access logs | Authenticated (any valid token) |
 | Create, edit, or delete links | `golinks:admin` |
 | Access admin tools (e.g. UA backfill) | `golinks:admin` |
 
